@@ -15,6 +15,8 @@ import 'package:df_log/df_log.dart';
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
 void main() {
-  Glog.err('Oh no this is an error!'); // 🔴 [example/main] Oh no this is an error!
+  Glog.err(
+    'Oh no this is an error!',
+  ); // 🔴 [example/main] Oh no this is an error!
   print(Glog.items);
 }

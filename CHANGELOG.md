@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.3.0]
+
+- Released @ 5/2025 (UTC)
+- breaking: Improve entire package
+
 ## [0.2.3]
 
 - Released @ 10/2024 (UTC)
