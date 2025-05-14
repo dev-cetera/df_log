@@ -1,7 +1,7 @@
 ##.title
 ## ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 ##
-## Dart/Flutter (DF) Packages by DevCetra.com & contributors. The use of this
+## Dart/Flutter (DF) Packages by dev-cetera.com & contributors. The use of this
 ## source code is governed by an MIT-style license described in the LICENSE
 ## file located in this project's root directory.
 ##
@@ -12,10 +12,10 @@
 
 name: df_log
 description: A package that provides logging utilities for better debugging.
-version: 0.2.4
-repository: https://github.com/robmllze/df_log
+version: 0.3.0
+repository: https://github.com/dev-cetera/df_log
 funding:
-  - https://www.buymeacoffee.com/robmllze
+  - https://www.buymeacoffee.com/dev_cetera
 topics:
   - console
   - debugging
@@ -32,6 +32,7 @@ environment:
 
 dependencies:
   path: ^1.9.0
+  stack_trace: ^1.12.1
 
 ## -----------------------------------------------------------------------------
 
