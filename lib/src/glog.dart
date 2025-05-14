@@ -12,7 +12,6 @@ import 'package:path/path.dart' as p;
 import 'dart:developer';
 
 import '_src.g.dart';
-import 'ansi_styled_string.dart';
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
@@ -289,13 +288,12 @@ final class Glog {
     String? path;
     if (includePath) {
       final here = const Here(3).call();
-      path =
-          here != null
-              ? [
-                p.basenameWithoutExtension(here.library),
-                here.member,
-              ].join('/')
-              : null;
+      path = here != null
+          ? [
+              p.basenameWithoutExtension(here.library),
+              here.member,
+            ].join('/')
+          : null;
     }
     final item = GlogItem(
       path: path,
@@ -312,17 +310,12 @@ final class Glog {
       if (group == null || {...whitelist, ...whitelist}.contains(group)) {
         String output;
         if (stylize) {
-          final pathStyle1 =
-              pathStyle != null ? AnsiStyle.italic + pathStyle : null;
-          final bracketsStyle =
-              pathStyle != null ? AnsiStyle.bold + pathStyle : null;
+          final pathStyle1 = pathStyle != null ? AnsiStyle.italic + pathStyle : null;
+          final bracketsStyle = pathStyle != null ? AnsiStyle.bold + pathStyle : null;
           final path1 = path?.withAnsiStyle(pathStyle1);
-          final path2 =
-              path1 != null && path1.isNotEmpty
-                  ? '['.withAnsiStyle(bracketsStyle) +
-                      path1 +
-                      ']'.withAnsiStyle(bracketsStyle)
-                  : null;
+          final path2 = path1 != null && path1.isNotEmpty
+              ? '['.withAnsiStyle(bracketsStyle) + path1 + ']'.withAnsiStyle(bracketsStyle)
+              : null;
           final message1 = message.toString().trim();
           final message2 = message1.withAnsiStyle(messageStyle);
           output = [
