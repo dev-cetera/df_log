@@ -47,6 +47,16 @@ final class Glog {
   }
 
   @pragma('vm:prefer-inline')
+  static void throwErr(dynamic message, [Symbol? group]) {
+    throw glog(
+      message: message,
+      category: GlogCategory.ERROR,
+      group: group,
+      pathStyle: AnsiStyle.fgLightBlack,
+    );
+  }
+
+  @pragma('vm:prefer-inline')
   static void alert(dynamic message, [Symbol? group]) {
     glog(
       message: message,
@@ -257,7 +267,7 @@ final class Glog {
   }
 
   /// Whether to stylize the logs.
-  static bool stylize = true;
+  static bool stylize = false;
 
   static var _printFunction = print;
 
@@ -276,7 +286,7 @@ final class Glog {
   }
 
   @pragma('vm:prefer-inline')
-  static void glog({
+  static String glog({
     GlogCategory? category,
     Object? message,
     AnsiStyle? messageStyle,
@@ -284,10 +294,11 @@ final class Glog {
     Symbol? group,
     Set<Symbol> whitelist = const {#debug},
     bool includePath = true,
+    int initialStackLevel = 3,
   }) {
     String? path;
     if (includePath) {
-      final here = const Here(3).call();
+      final here = Here(initialStackLevel).call();
       path = here != null
           ? [
               p.basenameWithoutExtension(here.library),
@@ -304,11 +315,10 @@ final class Glog {
     for (var e in callbacks) {
       e(group, item);
     }
-
+    String? output;
     // No cost in debug mode.
     assert(() {
       if (group == null || {...whitelist, ...whitelist}.contains(group)) {
-        String output;
         if (stylize) {
           final pathStyle1 = pathStyle != null ? AnsiStyle.italic + pathStyle : null;
           final bracketsStyle = pathStyle != null ? AnsiStyle.bold + pathStyle : null;
@@ -336,6 +346,7 @@ final class Glog {
       }
       return true;
     }());
+    return output ?? message.toString();
   }
 }
 

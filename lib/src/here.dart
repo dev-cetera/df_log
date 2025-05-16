@@ -19,13 +19,13 @@ final class Here {
   //
   //
 
-  final int level;
+  final int initialStackLevel;
 
   //
   //
   //
 
-  const Here(this.level) : assert(level >= 0);
+  const Here(this.initialStackLevel) : assert(initialStackLevel >= 0);
 
   //
   //
@@ -33,7 +33,7 @@ final class Here {
 
   Frame? call() {
     final frames = Trace.current().frames;
-    for (var i = level; i < frames.length; i++) {
+    for (var i = initialStackLevel; i < frames.length; i++) {
       final frame = frames[i];
 
       final lineNumber = frame.line;
