@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.3.2]
+
+- Released @ 5/2025 (UTC)
+- update logic
+
 ## [0.3.1]
 
 - Released @ 5/2025 (UTC)
