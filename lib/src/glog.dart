@@ -299,12 +299,13 @@ final class Glog {
     String? path;
     if (includePath) {
       final here = Here(initialStackLevel).call();
-      path = here != null
-          ? [
-              p.basenameWithoutExtension(here.library),
-              here.member,
-            ].join('/')
-          : null;
+      path =
+          here != null
+              ? [
+                p.basenameWithoutExtension(here.library),
+                here.member,
+              ].join('/')
+              : null;
     }
     final item = GlogItem(
       path: path,
@@ -320,12 +321,17 @@ final class Glog {
     assert(() {
       if (group == null || {...whitelist, ...whitelist}.contains(group)) {
         if (stylize) {
-          final pathStyle1 = pathStyle != null ? AnsiStyle.italic + pathStyle : null;
-          final bracketsStyle = pathStyle != null ? AnsiStyle.bold + pathStyle : null;
+          final pathStyle1 =
+              pathStyle != null ? AnsiStyle.italic + pathStyle : null;
+          final bracketsStyle =
+              pathStyle != null ? AnsiStyle.bold + pathStyle : null;
           final path1 = path?.withAnsiStyle(pathStyle1);
-          final path2 = path1 != null && path1.isNotEmpty
-              ? '['.withAnsiStyle(bracketsStyle) + path1 + ']'.withAnsiStyle(bracketsStyle)
-              : null;
+          final path2 =
+              path1 != null && path1.isNotEmpty
+                  ? '['.withAnsiStyle(bracketsStyle) +
+                      path1 +
+                      ']'.withAnsiStyle(bracketsStyle)
+                  : null;
           final message1 = message.toString().trim();
           final message2 = message1.withAnsiStyle(messageStyle);
           output = [
