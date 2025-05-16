@@ -27,8 +27,8 @@ final class Glog {
   //
 
   @pragma('vm:prefer-inline')
-  static void trace(dynamic message, [Symbol? group]) {
-    glog(
+  static _GlogMessage trace(dynamic message, [Symbol? group]) {
+    return glog(
       message: message,
       category: GlogCategory.TRACE,
       group: group,
@@ -37,8 +37,8 @@ final class Glog {
   }
 
   @pragma('vm:prefer-inline')
-  static void err(dynamic message, [Symbol? group]) {
-    glog(
+  static _GlogMessage err(dynamic message, [Symbol? group]) {
+    return glog(
       message: message,
       category: GlogCategory.ERROR,
       group: group,
@@ -47,18 +47,8 @@ final class Glog {
   }
 
   @pragma('vm:prefer-inline')
-  static void throwErr(dynamic message, [Symbol? group]) {
-    throw glog(
-      message: message,
-      category: GlogCategory.ERROR,
-      group: group,
-      pathStyle: AnsiStyle.fgLightBlack,
-    );
-  }
-
-  @pragma('vm:prefer-inline')
-  static void alert(dynamic message, [Symbol? group]) {
-    glog(
+  static _GlogMessage alert(dynamic message, [Symbol? group]) {
+    return glog(
       message: message,
       category: GlogCategory.ALERT,
       group: group,
@@ -67,8 +57,8 @@ final class Glog {
   }
 
   @pragma('vm:prefer-inline')
-  static void ignore(dynamic message, [Symbol? group]) {
-    glog(
+  static _GlogMessage ignore(dynamic message, [Symbol? group]) {
+    return glog(
       message: message,
       category: GlogCategory.IGNORE,
       group: group,
@@ -78,8 +68,8 @@ final class Glog {
   }
 
   @pragma('vm:prefer-inline')
-  static void ok(dynamic message, [Symbol? group]) {
-    glog(
+  static _GlogMessage ok(dynamic message, [Symbol? group]) {
+    return glog(
       message: message,
       category: GlogCategory.OK,
       group: group,
@@ -88,8 +78,8 @@ final class Glog {
   }
 
   @pragma('vm:prefer-inline')
-  static void start(dynamic message, [Symbol? group]) {
-    glog(
+  static _GlogMessage start(dynamic message, [Symbol? group]) {
+    return glog(
       message: message,
       category: GlogCategory.START,
       group: group,
@@ -98,8 +88,8 @@ final class Glog {
   }
 
   @pragma('vm:prefer-inline')
-  static void stop(dynamic message, [Symbol? group]) {
-    glog(
+  static _GlogMessage stop(dynamic message, [Symbol? group]) {
+    return glog(
       message: message,
       category: GlogCategory.STOP,
       group: group,
@@ -108,8 +98,8 @@ final class Glog {
   }
 
   @pragma('vm:prefer-inline')
-  static void info(dynamic message, [Symbol? group]) {
-    glog(
+  static _GlogMessage info(dynamic message, [Symbol? group]) {
+    return glog(
       message: message,
       category: GlogCategory.INFO,
       group: group,
@@ -118,8 +108,8 @@ final class Glog {
   }
 
   @pragma('vm:prefer-inline')
-  static void message(dynamic message, [Symbol? group]) {
-    glog(
+  static _GlogMessage message(dynamic message, [Symbol? group]) {
+    return glog(
       message: message,
       category: GlogCategory.MESSAGE,
       group: group,
@@ -128,23 +118,23 @@ final class Glog {
   }
 
   @pragma('vm:prefer-inline')
-  static void printBlack(Object? message) {
-    glog(message: message, messageStyle: AnsiStyle.fgBlack, includePath: false);
+  static _GlogMessage printBlack(Object? message) {
+    return glog(message: message, messageStyle: AnsiStyle.fgBlack, includePath: false);
   }
 
   @pragma('vm:prefer-inline')
-  static void printRed(Object? message) {
-    glog(message: message, messageStyle: AnsiStyle.fgRed, includePath: false);
+  static _GlogMessage printRed(Object? message) {
+    return glog(message: message, messageStyle: AnsiStyle.fgRed, includePath: false);
   }
 
   @pragma('vm:prefer-inline')
-  static void printGreen(Object? message) {
-    glog(message: message, messageStyle: AnsiStyle.fgGreen, includePath: false);
+  static _GlogMessage printGreen(Object? message) {
+    return glog(message: message, messageStyle: AnsiStyle.fgGreen, includePath: false);
   }
 
   @pragma('vm:prefer-inline')
-  static void printYellow(Object? message) {
-    glog(
+  static _GlogMessage printYellow(Object? message) {
+    return glog(
       message: message,
       messageStyle: AnsiStyle.fgYellow,
       includePath: false,
@@ -152,13 +142,13 @@ final class Glog {
   }
 
   @pragma('vm:prefer-inline')
-  static void printBlue(Object? message) {
-    glog(message: message, messageStyle: AnsiStyle.fgBlue, includePath: false);
+  static _GlogMessage printBlue(Object? message) {
+    return glog(message: message, messageStyle: AnsiStyle.fgBlue, includePath: false);
   }
 
   @pragma('vm:prefer-inline')
-  static void printPurple(Object? message) {
-    glog(
+  static _GlogMessage printPurple(Object? message) {
+    return glog(
       message: message,
       messageStyle: AnsiStyle.fgPurple,
       includePath: false,
@@ -166,18 +156,18 @@ final class Glog {
   }
 
   @pragma('vm:prefer-inline')
-  static void printCyan(Object? message) {
-    glog(message: message, messageStyle: AnsiStyle.fgCyan, includePath: false);
+  static _GlogMessage printCyan(Object? message) {
+    return glog(message: message, messageStyle: AnsiStyle.fgCyan, includePath: false);
   }
 
   @pragma('vm:prefer-inline')
-  static void printWhite(Object? message) {
-    glog(message: message, messageStyle: AnsiStyle.fgWhite, includePath: false);
+  static _GlogMessage printWhite(Object? message) {
+    return glog(message: message, messageStyle: AnsiStyle.fgWhite, includePath: false);
   }
 
   @pragma('vm:prefer-inline')
-  static void printLightBlack(Object? message) {
-    glog(
+  static _GlogMessage printLightBlack(Object? message) {
+    return glog(
       message: message,
       messageStyle: AnsiStyle.fgLightBlack,
       includePath: false,
@@ -185,13 +175,13 @@ final class Glog {
   }
 
   @pragma('vm:prefer-inline')
-  static void printLightRed(Object? message) {
-    glog(message: message, messageStyle: AnsiStyle.fgRed, includePath: false);
+  static _GlogMessage printLightRed(Object? message) {
+    return glog(message: message, messageStyle: AnsiStyle.fgRed, includePath: false);
   }
 
   @pragma('vm:prefer-inline')
-  static void printLightGreen(Object? message) {
-    glog(
+  static _GlogMessage printLightGreen(Object? message) {
+    return glog(
       message: message,
       messageStyle: AnsiStyle.fgLightGreen,
       includePath: false,
@@ -199,8 +189,8 @@ final class Glog {
   }
 
   @pragma('vm:prefer-inline')
-  static void lightYellow(Object? message) {
-    glog(
+  static _GlogMessage lightYellow(Object? message) {
+    return glog(
       message: message,
       messageStyle: AnsiStyle.fgYellow,
       includePath: false,
@@ -208,8 +198,8 @@ final class Glog {
   }
 
   @pragma('vm:prefer-inline')
-  static void lightBlue(Object? message) {
-    glog(
+  static _GlogMessage lightBlue(Object? message) {
+    return glog(
       message: message,
       messageStyle: AnsiStyle.fgLightBlue,
       includePath: false,
@@ -217,8 +207,8 @@ final class Glog {
   }
 
   @pragma('vm:prefer-inline')
-  static void lightPurple(Object? message) {
-    glog(
+  static _GlogMessage lightPurple(Object? message) {
+    return glog(
       message: message,
       messageStyle: AnsiStyle.fgLightPurple,
       includePath: false,
@@ -226,8 +216,8 @@ final class Glog {
   }
 
   @pragma('vm:prefer-inline')
-  static void lightCyan(Object? message) {
-    glog(
+  static _GlogMessage lightCyan(Object? message) {
+    return glog(
       message: message,
       messageStyle: AnsiStyle.fgLightCyan,
       includePath: false,
@@ -235,8 +225,8 @@ final class Glog {
   }
 
   @pragma('vm:prefer-inline')
-  static void lightWhite(Object? message) {
-    glog(
+  static _GlogMessage lightWhite(Object? message) {
+    return glog(
       message: message,
       messageStyle: AnsiStyle.fgLightWhite,
       includePath: false,
@@ -286,7 +276,7 @@ final class Glog {
   }
 
   @pragma('vm:prefer-inline')
-  static String glog({
+  static _GlogMessage glog({
     GlogCategory? category,
     Object? message,
     AnsiStyle? messageStyle,
@@ -299,13 +289,12 @@ final class Glog {
     String? path;
     if (includePath) {
       final here = Here(initialStackLevel).call();
-      path =
-          here != null
-              ? [
-                p.basenameWithoutExtension(here.library),
-                here.member,
-              ].join('/')
-              : null;
+      path = here != null
+          ? [
+              p.basenameWithoutExtension(here.library),
+              here.member,
+            ].join('/')
+          : null;
     }
     final item = GlogItem(
       path: path,
@@ -316,22 +305,18 @@ final class Glog {
     for (var e in callbacks) {
       e(group, item);
     }
-    String? output;
+
     // No cost in debug mode.
     assert(() {
+      String? output;
       if (group == null || {...whitelist, ...whitelist}.contains(group)) {
         if (stylize) {
-          final pathStyle1 =
-              pathStyle != null ? AnsiStyle.italic + pathStyle : null;
-          final bracketsStyle =
-              pathStyle != null ? AnsiStyle.bold + pathStyle : null;
+          final pathStyle1 = pathStyle != null ? AnsiStyle.italic + pathStyle : null;
+          final bracketsStyle = pathStyle != null ? AnsiStyle.bold + pathStyle : null;
           final path1 = path?.withAnsiStyle(pathStyle1);
-          final path2 =
-              path1 != null && path1.isNotEmpty
-                  ? '['.withAnsiStyle(bracketsStyle) +
-                      path1 +
-                      ']'.withAnsiStyle(bracketsStyle)
-                  : null;
+          final path2 = path1 != null && path1.isNotEmpty
+              ? '['.withAnsiStyle(bracketsStyle) + path1 + ']'.withAnsiStyle(bracketsStyle)
+              : null;
           final message1 = message.toString().trim();
           final message2 = message1.withAnsiStyle(messageStyle);
           output = [
@@ -352,7 +337,7 @@ final class Glog {
       }
       return true;
     }());
-    return output ?? message.toString();
+    return _GlogMessage(message?.toString());
   }
 }
 
@@ -406,4 +391,15 @@ class GlogItem {
       message1,
     ].nonNulls.join(' ');
   }
+}
+
+// ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+
+class _GlogMessage {
+  final String? message;
+
+  const _GlogMessage(this.message);
+
+  @override
+  String toString() => '[GlogMessage] ${message ?? '???'}';
 }
