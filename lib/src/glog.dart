@@ -8,7 +8,7 @@
 // ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 //title~
 
-import 'package:path/path.dart' as p;
+import 'package:df_safer_dart/df_safer_dart.dart' show Here;
 import 'dart:developer';
 
 import '_src.g.dart';
@@ -314,19 +314,12 @@ final class Glog {
     bool includePath = true,
     int initialStackLevel = 3,
   }) {
-    String? path;
+    String? basepath;
     if (includePath) {
-      final here = Here(initialStackLevel).call();
-      path =
-          here != null
-              ? [
-                p.basenameWithoutExtension(here.library),
-                here.member,
-              ].join('/')
-              : null;
+      basepath = Here(initialStackLevel).basepath;
     }
     final item = GlogItem(
-      path: path,
+      basepath: basepath,
       message: message,
       category: category ?? GlogCategory.MESSAGE,
     );
@@ -340,17 +333,12 @@ final class Glog {
       String? output;
       if (group == null || {...whitelist, ...whitelist}.contains(group)) {
         if (stylize) {
-          final pathStyle1 =
-              pathStyle != null ? AnsiStyle.italic + pathStyle : null;
-          final bracketsStyle =
-              pathStyle != null ? AnsiStyle.bold + pathStyle : null;
-          final path1 = path?.withAnsiStyle(pathStyle1);
-          final path2 =
-              path1 != null && path1.isNotEmpty
-                  ? '['.withAnsiStyle(bracketsStyle) +
-                      path1 +
-                      ']'.withAnsiStyle(bracketsStyle)
-                  : null;
+          final pathStyle1 = pathStyle != null ? AnsiStyle.italic + pathStyle : null;
+          final bracketsStyle = pathStyle != null ? AnsiStyle.bold + pathStyle : null;
+          final path1 = basepath?.withAnsiStyle(pathStyle1);
+          final path2 = path1 != null && path1.isNotEmpty
+              ? '['.withAnsiStyle(bracketsStyle) + path1 + ']'.withAnsiStyle(bracketsStyle)
+              : null;
           final message1 = message.toString().trim();
           final message2 = message1.withAnsiStyle(messageStyle);
           output = [
@@ -359,7 +347,7 @@ final class Glog {
             message2,
           ].nonNulls.join(' ');
         } else {
-          final path2 = path != null && path.isNotEmpty ? '[$path]' : null;
+          final path2 = basepath != null && basepath.isNotEmpty ? '[$basepath]' : null;
           final message2 = message.toString();
           output = [
             if (path2 != null) category?.icon,
@@ -409,15 +397,15 @@ enum GlogCategory {
 
 /// Represents a single log entry with path, message, and category.
 class GlogItem {
-  final String? path;
+  final String? basepath;
   final Object? message;
   final GlogCategory? category;
 
-  const GlogItem({this.path, this.message, this.category});
+  const GlogItem({this.basepath, this.message, this.category});
 
   @override
   String toString() {
-    final path1 = path != null && path!.isEmpty ? '[$path]' : null;
+    final path1 = basepath != null && basepath!.isEmpty ? '[$basepath]' : null;
     final message1 = message.toString().trim();
     return [
       if (path1 != null) category?.icon,
