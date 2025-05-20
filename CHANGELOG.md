@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.3.4]
+
+- Released @ 5/2025 (UTC)
+- bugfix: Fix path issue
+
 ## [0.3.3]
 
 - Released @ 5/2025 (UTC)
