@@ -338,11 +338,17 @@ final class Log {
       String? output;
       if (group == null || {...whitelist, ...whitelist}.contains(group)) {
         if (stylize) {
-          final pathStyle1 = pathStyle != null ? AnsiStyle.italic + pathStyle : null;
-          final bracketsStyle = pathStyle != null ? AnsiStyle.bold + pathStyle : null;
+          final pathStyle1 = pathStyle != null
+              ? AnsiStyle.italic + pathStyle
+              : null;
+          final bracketsStyle = pathStyle != null
+              ? AnsiStyle.bold + pathStyle
+              : null;
           final path1 = basepath?.withAnsiStyle(pathStyle1);
           final path2 = path1 != null && path1.isNotEmpty
-              ? '['.withAnsiStyle(bracketsStyle) + path1 + ']'.withAnsiStyle(bracketsStyle)
+              ? '['.withAnsiStyle(bracketsStyle) +
+                    path1 +
+                    ']'.withAnsiStyle(bracketsStyle)
               : null;
           final message1 = message.toString().trim();
           final message2 = message1.withAnsiStyle(messageStyle);
@@ -352,7 +358,9 @@ final class Log {
             message2,
           ].nonNulls.join(' ');
         } else {
-          final path2 = basepath != null && basepath.isNotEmpty ? '[$basepath]' : null;
+          final path2 = basepath != null && basepath.isNotEmpty
+              ? '[$basepath]'
+              : null;
           final message2 = message.toString();
           output = [
             if (path2 != null) category?.icon,

@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.3.5]
+
+- Released @ 5/2025 (UTC)
+- chore: Rename Glog to Log
+
 ## [0.3.4]
 
 - Released @ 5/2025 (UTC)
