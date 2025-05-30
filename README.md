@@ -13,8 +13,8 @@ A package that provides logging utilities for better debugging. For a full featu
 
 ```dart
 void main() {
-  Glog.err('Oh no this is an error!'); // 🔴 [example/main] Oh no this is an error!
-  print(Glog.items);
+  Log.err('Oh no this is an error!'); // 🔴 [example/main] Oh no this is an error!
+  print(Log.items);
 }
 ```
 
