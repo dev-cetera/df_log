@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.3.7]
+
+- Released @ 6/2025 (UTC)
+- docs: Update readme
+
 ## [0.3.6]
 
 - Released @ 6/2025 (UTC)
