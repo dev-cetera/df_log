@@ -20,6 +20,10 @@ A package that provides a simple, powerful, and beautiful logging utility for be
 - **IDE Integration:** Optionally uses `dart:developer`'s `log` function for a richer experience in some IDEs.
 - **Extensible:** Add custom callbacks to integrate with other services (e.g., crash reporting).
 
+## Screenshot
+
+<img src="https://raw.githubusercontent.com/dev-cetera/df_log/main/example/example.png" alt="Example image" width="400">
+
 ## Usage
 
 ### 1. Categorized Logs
