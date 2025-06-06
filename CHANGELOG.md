@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.3.6]
+
+- Released @ 6/2025 (UTC)
+- update: Organize and clean up
+
 ## [0.3.5]
 
 - Released @ 5/2025 (UTC)

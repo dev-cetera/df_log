@@ -50,8 +50,8 @@ final class LogItem {
     this.showId = false,
     this.showTags = true,
     this.showTimestamp = false,
-  })  : id = const Uuid().v4(),
-        timestamp = DateTime.now();
+  }) : id = const Uuid().v4(),
+       timestamp = DateTime.now();
 
   //
   //
@@ -105,8 +105,12 @@ final class LogItem {
     final hasPath = basepath1 != null && basepath1.isNotEmpty;
 
     if (hasPath) {
-      final bracketStyle = nonMessageStyle != null ? AnsiStyle.bold + nonMessageStyle : null;
-      final pathTextStyle = nonMessageStyle != null ? AnsiStyle.italic + nonMessageStyle : null;
+      final bracketStyle = nonMessageStyle != null
+          ? AnsiStyle.bold + nonMessageStyle
+          : null;
+      final pathTextStyle = nonMessageStyle != null
+          ? AnsiStyle.italic + nonMessageStyle
+          : null;
       if (icon != null) {
         buffer.write('$icon ');
       }
@@ -122,7 +126,9 @@ final class LogItem {
     }
 
     if (message != null) {
-      final styledMessage = message.toString().trim().withAnsiStyle(messageStyle);
+      final styledMessage = message.toString().trim().withAnsiStyle(
+        messageStyle,
+      );
       buffer.write(styledMessage);
     }
 
@@ -144,7 +150,8 @@ final class LogItem {
 
   Map<String, dynamic> toMap() {
     return {
-      if (icon != null && (basepath != null && basepath!.isNotEmpty)) 'icon': icon,
+      if (icon != null && (basepath != null && basepath!.isNotEmpty))
+        'icon': icon,
       if (basepath != null && basepath!.isNotEmpty) 'path': basepath,
       if (message != null) 'message': message.toString(),
       'timestamp': timestamp.toIso8601String(),
@@ -159,7 +166,9 @@ final class LogItem {
 
   String toJson({bool pretty = true}) {
     final map = toMap();
-    final encoder = pretty ? const JsonEncoder.withIndent('  ') : const JsonEncoder();
+    final encoder = pretty
+        ? const JsonEncoder.withIndent('  ')
+        : const JsonEncoder();
     return encoder.convert(map);
   }
 

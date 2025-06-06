@@ -30,10 +30,7 @@ final class Log {
 
   /// A filter for console output. A log is printed if untagged, or if ALL of
   /// its tags are present in this set.
-  static var activeTags = {
-    #debug,
-    ..._IconCategory.values.map((e) => e.tag),
-  };
+  static var activeTags = {#debug, ..._IconCategory.values.map((e) => e.tag)};
 
   /// Adds [tags] to [activeTags].
   static void addTags(Set<Symbol> tags) {
@@ -529,10 +526,7 @@ final class Log {
     }
 
     // Combine tags with the tag from category.
-    final combinedTags = {
-      ...tags,
-      if (category != null) category.tag,
-    };
+    final combinedTags = {...tags, if (category != null) category.tag};
 
     // Create a item to log.
     final logItem = LogItem(
@@ -610,10 +604,7 @@ enum _IconCategory {
   //
   //
 
-  const _IconCategory(
-    this.icon,
-    this.tag,
-  );
+  const _IconCategory(this.icon, this.tag);
 }
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
