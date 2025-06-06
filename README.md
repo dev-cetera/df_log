@@ -48,10 +48,15 @@ void main() {
 Colored logs enhance readability and help you quickly identify different types of messages in the console. By applying distinct colors, you can easily track errors, successes, warnings, and other log types at a glance.
 
 ```dart
-Log.printRed('This is an important error.');
-Log.printGreen('Operation was successful.');
-Log.printYellow('This is a warning.');
-// and many more...
+// If the Log class conflicts with another class, use an alias with as.
+import 'package:df_log/df_log.dart' as df;
+
+void main() {
+  df.Log.printRed('This is an important error.');
+  df.Log.printGreen('Operation was successful.');
+  df.Log.printYellow('This is a warning.');
+  // and many more...
+}
 ```
 
 ### 3. Tags
