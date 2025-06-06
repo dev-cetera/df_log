@@ -28,6 +28,8 @@ A package that provides a simple, powerful, and beautiful logging utility for be
 
 ### 1. Categorized Logs
 
+The package comes with a few default log types that you can use creatively.
+
 ```dart
 import 'package:df_log/df_log.dart';
 
@@ -43,13 +45,18 @@ void main() {
 
 ### 2. Colored Logs
 
+Colored logs enhance readability and help you quickly identify different types of messages in the console. By applying distinct colors, you can easily track errors, successes, warnings, and other log types at a glance.
+
 ```dart
 Log.printRed('This is an important error.');
 Log.printGreen('Operation was successful.');
 Log.printYellow('This is a warning.');
+// and many more...
 ```
 
-### 2. Colored Logs
+### 3. Tags
+
+Using tags with logs simplifies debugging and organization. Tags allow you to filter logs by including or excluding specific categories, making it easier to focus on relevant information. They can also help categorize data for analytics or other purposes.
 
 ```dart
 // main.dart
@@ -75,6 +82,8 @@ void main() {
 ```
 
 ### 3. Configuration
+
+You can customize the logging behavior to suit your needs, including styling, output format, and storage options. The Log class provides various settings to control how logs are displayed and managed.
 
 ```dart
 void main() {
