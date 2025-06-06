@@ -15,8 +15,14 @@ import 'package:df_log/df_log.dart';
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
 void main() {
-  Log.err(
-    'Oh no this is an error!',
-  ); // 🔴 [example/main] Oh no this is an error!
-  print(Log.items);
+  Log.start('Application starting...');
+  Log.info('This is an informational message.');
+  Log.ok('User successfully authenticated.');
+  Log.alert('Network connection is slow.');
+  Log.err('Failed to load user data!');
+  Log.stop('Application shutting down.');
+  Log.printRed('This is an important error.');
+  Log.printGreen('Operation was successful.');
+  Log.printYellow('This is a warning.');
+  print(Log.items.map((e) => e.toJson()));
 }
