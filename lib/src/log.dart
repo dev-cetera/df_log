@@ -522,7 +522,7 @@ final class Log {
     // Maybe get the basepath.
     String? basepath;
     if (includePath) {
-      basepath = Here(initialStackLevel).basepath;
+      basepath = Here(initialStackLevel).basepath.orNull();
     }
 
     // Combine tags with the tag from category.
