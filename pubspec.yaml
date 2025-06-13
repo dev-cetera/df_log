@@ -12,7 +12,7 @@
 
 name: df_log
 description: A package that provides logging utilities for better debugging.
-version: 0.3.10
+version: 0.3.11
 repository: https://github.com/dev-cetera/df_log
 funding:
   - https://www.buymeacoffee.com/dev_cetera
@@ -32,7 +32,7 @@ environment:
 
 dependencies:
   path: ^1.9.1
-  df_safer_dart: ^0.13.1
+  df_safer_dart: ^0.13.14
   uuid: ^4.5.1
   meta: ^1.16.0
 
