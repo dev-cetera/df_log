@@ -25,7 +25,7 @@ final class LogItem {
 
   final String id;
   final DateTime timestamp;
-  final String? basepath;
+  final String? location;
   final String? icon;
   final Object? message;
   final Set<Symbol> tags;
@@ -43,15 +43,15 @@ final class LogItem {
   //
 
   LogItem({
-    this.basepath,
+    this.location,
     this.icon,
     this.message,
     this.tags = const {},
     this.showId = false,
     this.showTags = true,
     this.showTimestamp = false,
-  }) : id = const Uuid().v4(),
-       timestamp = DateTime.now();
+  })  : id = const Uuid().v4(),
+        timestamp = DateTime.now();
 
   //
   //
@@ -59,14 +59,14 @@ final class LogItem {
 
   String toConsoleString() {
     final buffer = StringBuffer();
-    final hasPath = basepath != null && basepath!.isNotEmpty;
+    final hasPath = location != null && location!.isNotEmpty;
 
     if (hasPath) {
       buffer.write('[');
       if (icon != null) {
         buffer.write('$icon ');
       }
-      buffer.write(basepath);
+      buffer.write(location);
       if (showTimestamp) {
         final isoString = timestamp.toLocal().toIso8601String();
         // Grabs 'HH:mm:ss.SSS'
@@ -101,21 +101,17 @@ final class LogItem {
     required AnsiStyle? nonMessageStyle,
   }) {
     final buffer = StringBuffer();
-    final basepath1 = basepath;
-    final hasPath = basepath1 != null && basepath1.isNotEmpty;
+    final location1 = location;
+    final hasLocation = location1 != null && location1.isNotEmpty;
 
-    if (hasPath) {
-      final bracketStyle = nonMessageStyle != null
-          ? AnsiStyle.bold + nonMessageStyle
-          : null;
-      final pathTextStyle = nonMessageStyle != null
-          ? AnsiStyle.italic + nonMessageStyle
-          : null;
+    if (hasLocation) {
+      final bracketStyle = nonMessageStyle != null ? AnsiStyle.bold + nonMessageStyle : null;
+      final pathTextStyle = nonMessageStyle != null ? AnsiStyle.italic + nonMessageStyle : null;
       if (icon != null) {
         buffer.write('$icon ');
       }
       buffer.write('['.withAnsiStyle(bracketStyle));
-      buffer.write(basepath1.withAnsiStyle(pathTextStyle));
+      buffer.write(location1.withAnsiStyle(pathTextStyle));
 
       if (showTimestamp) {
         final isoString = timestamp.toLocal().toIso8601String();
@@ -127,8 +123,8 @@ final class LogItem {
 
     if (message != null) {
       final styledMessage = message.toString().trim().withAnsiStyle(
-        messageStyle,
-      );
+            messageStyle,
+          );
       buffer.write(styledMessage);
     }
 
@@ -150,9 +146,8 @@ final class LogItem {
 
   Map<String, dynamic> toMap() {
     return {
-      if (icon != null && (basepath != null && basepath!.isNotEmpty))
-        'icon': icon,
-      if (basepath != null && basepath!.isNotEmpty) 'path': basepath,
+      if (icon != null && (location != null && location!.isNotEmpty)) 'icon': icon,
+      if (location != null && location!.isNotEmpty) 'location': location,
       if (message != null) 'message': message.toString(),
       'timestamp': timestamp.toIso8601String(),
       if (tags.isNotEmpty) 'tags': tags.map(_unmangleSymbol).toList(),
@@ -166,9 +161,7 @@ final class LogItem {
 
   String toJson({bool pretty = true}) {
     final map = toMap();
-    final encoder = pretty
-        ? const JsonEncoder.withIndent('  ')
-        : const JsonEncoder();
+    final encoder = pretty ? const JsonEncoder.withIndent('  ') : const JsonEncoder();
     return encoder.convert(map);
   }
 

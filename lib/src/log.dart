@@ -520,9 +520,9 @@ final class Log {
     required int initialStackLevel,
   }) {
     // Maybe get the basepath.
-    String? basepath;
+    String? location;
     if (includePath) {
-      basepath = Here(initialStackLevel).basepath.orNull();
+      location = Here(initialStackLevel).location.orNull();
     }
 
     // Combine tags with the tag from category.
@@ -530,7 +530,7 @@ final class Log {
 
     // Create a item to log.
     final logItem = LogItem(
-      basepath: basepath,
+      location: location,
       icon: category?.icon,
       message: message,
       tags: combinedTags,

@@ -21,8 +21,8 @@ void main() {
   Log.alert('Network connection is slow.');
   Log.err('Failed to load user data!');
   Log.stop('Application shutting down.');
-  Log.printRed('This is an important error.');
-  Log.printGreen('Operation was successful.');
-  Log.printYellow('This is a warning.');
+  Log.printRed('printRed: This is an important error.');
+  Log.printGreen('printGreen: Operation was successful.');
+  Log.printYellow('printYellow: This is a warning.');
   print(Log.items.map((e) => e.toJson()));
 }
