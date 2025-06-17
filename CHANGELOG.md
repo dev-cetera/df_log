@@ -4,7 +4,6 @@
 
 - Released @ 6/2025 (UTC)
 - Update dependencies
-- test
 
 ## [0.3.11]
 
