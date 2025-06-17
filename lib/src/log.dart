@@ -582,13 +582,17 @@ String? _shortenedLocation(String? location) {
   if (location == null) {
     return null;
   }
-  // Remove 'package:' prefix
-  var cleaned = location.replaceFirst(RegExp(r'^package:[^\/]+\/'), '');
-  // Remove column number (e.g., ':123' at the end)
-  cleaned = cleaned.replaceFirst(RegExp(r':\d+$'), '');
-  return cleaned.trim();
+  final parts = location.split(RegExp(r'\s+'));
+  final path = parts.first;
+  final line = parts.last.split(':').first;
+  final file = path.split('/').last.replaceAll('.dart', '');
+  if (path.startsWith('package:')) {
+    final package = path.split(':')[1].split('/').first;
+    return '$package:$file #$line';
+  } else {
+    return '$file #$line';
+  }
 }
-
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
 enum _IconCategory {
