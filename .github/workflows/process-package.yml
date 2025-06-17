@@ -1,0 +1,135 @@
+##.title
+## ... (your title block)
+##.title~
+
+name: Prepare and Trigger Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  # --- JOB 1: Prepares the release files for ANY '+' commit ---
+  prepare:
+    runs-on: ubuntu-latest
+    # Define outputs for this job so the next job can use them
+    outputs:
+      should_create_full_release: ${{ steps.check_message.outputs.IS_FULL_RELEASE }}
+      version: ${{ steps.get_package_info.outputs.PUBSPEC_VERSION }}
+      release_notes: ${{ steps.get_package_info.outputs.RELEASE_NOTES }}
+
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      # Step 2: Get commit message
+      - name: Get commit message
+        id: get_commit
+        run: |
+          COMMIT_MSG=$(git log --format=%B -n 1 HEAD | head -n 1)
+          echo "COMMIT_MSG=$COMMIT_MSG" >> $GITHUB_OUTPUT
+
+      # Step 3: Check for release triggers
+      - name: Check for release triggers
+        id: check_message
+        run: |
+          COMMIT_MSG="${{ steps.get_commit.outputs.COMMIT_MSG }}"
+          if [[ "$COMMIT_MSG" == +* ]]; then
+            echo "SHOULD_PREPARE=true" >> $GITHUB_OUTPUT
+            echo "Release preparation triggered."
+          else
+            echo "SHOULD_PREPARE=false" >> $GITHUB_OUTPUT
+          fi
+          if [[ "$COMMIT_MSG" == ++* ]]; then
+            echo "IS_FULL_RELEASE=true" >> $GITHUB_OUTPUT
+            echo "Full release will be created."
+          else
+            echo "IS_FULL_RELEASE=false" >> $GITHUB_OUTPUT
+          fi
+      
+      # Step 4: Extract package info from pubspec.yaml AND clean release notes
+      - name: Extract package info from pubspec.yaml
+        if: steps.check_message.outputs.SHOULD_PREPARE == 'true'
+        id: get_package_info
+        run: |
+          VERSION=$(grep "version:" pubspec.yaml | sed 's/version: //')
+          PACKAGE_NAME=$(grep "name:" pubspec.yaml | sed 's/name: //')
+          RELEASE_NOTES=$(echo "${{ steps.get_commit.outputs.COMMIT_MSG }}" | sed 's/^\++//' | xargs)
+          echo "PUBSPEC_VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "PACKAGE_NAME=$PACKAGE_NAME" >> $GITHUB_OUTPUT
+          echo "RELEASE_NOTES=$RELEASE_NOTES" >> $GITHUB_OUTPUT
+
+      # Only run file-modifying steps if preparation is triggered
+      - if: steps.check_message.outputs.SHOULD_PREPARE == 'true'
+        name: Run Preparation Steps
+        run: echo "Preparing files for version ${{ steps.get_package_info.outputs.PUBSPEC_VERSION }}..."
+      
+      - name: Set up Dart
+        if: steps.check_message.outputs.SHOULD_PREPARE == 'true'
+        uses: dart-lang/setup-dart@v1
+
+      - name: Fetch README Template
+        if: steps.check_message.outputs.SHOULD_PREPARE == 'true'
+        id: fetch_template
+        run: |
+          git clone --depth 1 https://github.com/dev-cetera/dart_package_template.git /tmp/dart_package_template
+          echo "TEMPLATE_PATH=/tmp/dart_package_template/_README_TEMPLATE.md" >> $GITHUB_OUTPUT
+
+      - name: Format and Fix Dart Code
+        if: steps.check_message.outputs.SHOULD_PREPARE == 'true'
+        run: |
+          dart format .
+          dart fix --apply
+
+      - name: Update CHANGELOG.md
+        if: steps.check_message.outputs.SHOULD_PREPARE == 'true'
+        run: |
+          dart run .github/scripts/update_changelog.dart "${{ steps.get_package_info.outputs.PUBSPEC_VERSION }}" "${{ steps.get_package_info.outputs.RELEASE_NOTES }}"
+
+      - name: Generate README.md
+        if: steps.check_message.outputs.SHOULD_PREPARE == 'true'
+        run: |
+          dart run .github/scripts/update_readme.dart "${{ steps.fetch_template.outputs.TEMPLATE_PATH }}" "${{ steps.get_package_info.outputs.PACKAGE_NAME }}" "${{ steps.get_package_info.outputs.PUBSPEC_VERSION }}"
+
+      - name: Commit and Push Changes
+        if: steps.check_message.outputs.SHOULD_PREPARE == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          if ! git diff --staged --quiet; then
+            git commit -m "ci: bump version to v${{ steps.get_package_info.outputs.PUBSPEC_VERSION }}"
+            git pull --rebase
+            git push origin main
+          else
+            echo "No changes to commit."
+          fi
+
+  # --- JOB 2: Creates the GitHub Release ONLY for '++' commits ---
+  create_release:
+    # This job depends on the 'prepare' job finishing successfully.
+    needs: prepare
+    # This entire job will ONLY RUN if the commit started with '++'.
+    if: needs.prepare.outputs.should_create_full_release == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG_NAME="v${{ needs.prepare.outputs.version }}"
+          echo "Creating release for tag ${TAG_NAME}..."
+          gh release create "$TAG_NAME" \
+            --title "Release ${TAG_NAME}" \
+            --notes "${{ needs.prepare.outputs.release_notes }}"
