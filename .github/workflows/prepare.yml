@@ -10,7 +10,7 @@
 ## ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 ##.title~
 
-name: Prepare version
+name: Prepare Release Version
 
 ## -----------------------------------------------------------------------------
 
@@ -25,70 +25,88 @@ jobs:
   prepare:
     runs-on: ubuntu-latest
     steps:
-      # Checkout the code from the repository
+      # Step 1: Checkout the full repository history.
+      # `fetch-depth: 0` is required to get all history for pushing tags/commits.
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-      # Get the latest commit message
-      - name: Get commit messages
-        id: get_commits
+      # Step 2: Get the first line of the latest commit message.
+      - name: Get commit message
+        id: get_commit
         run: |
-          COMMIT_MESSAGES=$(git log --format=%B -n 1 HEAD)
-          echo "::set-output name=COMMIT_MESSAGES::${COMMIT_MESSAGES}"
+          COMMIT_MSG=$(git log --format=%B -n 1 HEAD | head -n 1)
+          echo "COMMIT_MSG=$COMMIT_MSG" >> $GITHUB_OUTPUT
 
-      # Check if the commit message starts with '+'
-      - name: Check commit message
+      # Step 3: Check if the commit message starts with '+' to decide whether to proceed.
+      - name: Check for release trigger
         id: check_message
         run: |
-          if echo "${{ steps.get_commits.outputs.COMMIT_MESSAGES }}" | grep -q "^+"; then
-            echo "::set-output name=PROCEED::true"
+          if [[ "${{ steps.get_commit.outputs.COMMIT_MSG }}" == +* ]]; then
+            echo "PROCEED=true" >> $GITHUB_OUTPUT
+            echo "Release triggered by '+' commit."
           else
-            echo "::set-output name=PROCEED::false"
+            echo "PROCEED=false" >> $GITHUB_OUTPUT
+            echo "Standard commit. No release action taken."
           fi
 
-      # Debug environment variables
-      - name: Debug environment variables
-        run: |
-          echo "PROCEED=${{ steps.check_message.outputs.PROCEED }}"
-          echo "COMMIT_MESSAGES=${{ steps.get_commits.outputs.COMMIT_MESSAGES }}"
+      # --- The following steps only run if the commit message starts with '+' ---
 
-      # Set up Dart if the commit message check passed
       - name: Set up Dart
-        if: ${{ steps.check_message.outputs.PROCEED == 'true' }}
-        uses: dart-lang/setup-dart@v1.2
+        if: steps.check_message.outputs.PROCEED == 'true'
+        uses: dart-lang/setup-dart@v1
 
-      # Format Dart code if the commit message check passed
-      - name: Format Dart code
-        if: ${{ steps.check_message.outputs.PROCEED == 'true' }}
-        run: dart format .
+      - name: Format and Fix Dart Code
+        if: steps.check_message.outputs.PROCEED == 'true'
+        run: |
+          dart format .
+          dart fix --apply
 
-      # Apply Dart fixes if the commit message check passed
-      - name: Apply Dart fixes
-        if: ${{ steps.check_message.outputs.PROCEED == 'true' }}
-        run: dart fix --apply
-
-      # Extract the version from pubspec.yaml if the commit message check passed
+      # Step 4: Extract the version from pubspec.yaml.
       - name: Extract version from pubspec.yaml
-        if: ${{ steps.check_message.outputs.PROCEED == 'true' }}
+        if: steps.check_message.outputs.PROCEED == 'true'
         id: get_version
         run: |
           VERSION=$(grep "version:" pubspec.yaml | sed 's/version: //')
           echo "Version extracted from pubspec.yaml: $VERSION"
-          echo "::set-output name=PUBSPEC_VERSION::${VERSION}"
+          echo "PUBSPEC_VERSION=$VERSION" >> $GITHUB_OUTPUT
 
-      # Update CHANGELOG.md if the commit message check passed
+      # Step 5: Update CHANGELOG.md using the extracted version and commit message.
       - name: Update CHANGELOG.md
-        if: ${{ steps.check_message.outputs.PROCEED == 'true' }}
+        if: steps.check_message.outputs.PROCEED == 'true'
         run: |
-          RELEASE_NOTES="${{ steps.get_commits.outputs.COMMIT_MESSAGES }}"
+          # Use the commit message (with the leading '+' removed) as the release notes.
+          RELEASE_NOTES=$(echo "${{ steps.get_commit.outputs.COMMIT_MSG }}" | sed 's/^+//')
           dart run .github/scripts/update_changelog.dart "${{ steps.get_version.outputs.PUBSPEC_VERSION }}" "$RELEASE_NOTES"
 
-      # Commit and push changes if the commit message check passed
-      - name: Commit and push changes
-        if: ${{ steps.check_message.outputs.PROCEED == 'true' }}
+      # Step 6: Commit the automated changes (formatting, changelog, etc.).
+      - name: Commit automated changes
+        if: steps.check_message.outputs.PROCEED == 'true'
         run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "Prepare version ${{ steps.get_version.outputs.PUBSPEC_VERSION }}"
-          git push
+          # Check if there are changes to commit before committing.
+          if ! git diff --staged --quiet; then
+            git commit -m "ci: bump version to v${{ steps.get_version.outputs.PUBSPEC_VERSION }}"
+          else
+            echo "No changes to commit."
+          fi
+
+      # Step 7: Create and push the Git tag for the new version.
+      - name: Create and Push Git Tag
+        if: steps.check_message.outputs.PROCEED == 'true'
+        run: |
+          TAG_NAME="v${{ steps.get_version.outputs.PUBSPEC_VERSION }}"
+          echo "Creating and pushing tag: $TAG_NAME"
+          git tag -a "$TAG_NAME" -m "Release version ${TAG_NAME}"
+          git push origin "$TAG_NAME"
+
+      # Step 8: Push the automated commit back to the main branch.
+      - name: Push automated commit
+        if: steps.check_message.outputs.PROCEED == 'true'
+        run: |
+          # We need to pull first in case another workflow has pushed a commit.
+          git pull --rebase
+          git push origin main
