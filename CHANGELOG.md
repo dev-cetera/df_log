@@ -4,6 +4,7 @@
 
 - Released @ 6/2025 (UTC)
 - Test workflow again
+- Test workflow
 
 ## [0.1.0]
 
