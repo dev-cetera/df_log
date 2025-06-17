@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.3.16]
+
+- Released @ 6/2025 (UTC)
+- Update _shortenedLocation function
+
 ## [0.3.15]
 
 - Released @ 6/2025 (UTC)
