@@ -522,7 +522,7 @@ final class Log {
     // Maybe get the basepath.
     String? location;
     if (includePath) {
-      location = Here(initialStackLevel).location.orNull();
+      location = _shortenedLocation(Here(initialStackLevel).location.orNull());
     }
 
     // Combine tags with the tag from category.
@@ -575,6 +575,19 @@ final class Log {
 
 @Deprecated('Use "Log" instead!')
 typedef Glog = Log;
+
+// ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+
+String? _shortenedLocation(String? location) {
+  if (location == null) {
+    return null;
+  }
+  // Remove 'package:' prefix
+  var cleaned = location.replaceFirst(RegExp(r'^package:[^\/]+\/'), '');
+  // Remove column number (e.g., ':123' at the end)
+  cleaned = cleaned.replaceFirst(RegExp(r':\d+$'), '');
+  return cleaned.trim();
+}
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
