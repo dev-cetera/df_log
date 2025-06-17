@@ -10,7 +10,7 @@
 ## ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 ##.title~
 
-name: Prepare and Trigger Release
+name: Process Package
 
 ## -----------------------------------------------------------------------------
 
@@ -138,25 +138,25 @@ jobs:
           git push origin "$TAG_NAME" --force
           echo "Successfully pushed tag ${TAG_NAME}."
 
-  # JOB 2: Creates the GitHub Release ONLY for '++' commits
-  create_release:
-    needs: prepare # This job depends on the 'prepare' job finishing successfully.
-    if: needs.prepare.outputs.should_create_full_release == 'true' # This entire job will ONLY RUN if the commit started with '++'.
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write # To create the release
+  # # JOB 2: Creates the GitHub Release ONLY for '++' commits
+  # create_release:
+  #   needs: prepare # This job depends on the 'prepare' job finishing successfully.
+  #   if: needs.prepare.outputs.should_create_full_release == 'true' # This entire job will ONLY RUN if the commit started with '++'.
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: write # To create the release
       
-    steps:
-      # This job's only step is to create a formal GitHub Release from the tag pushed by the 'prepare' job.
-      - name: Create GitHub Release from existing tag
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provides authentication for the GitHub CLI
-        run: |
-          # Get the tag name from the previous job's output
-          TAG_NAME="v${{ needs.prepare.outputs.version }}"
-          echo "Found full release trigger. Creating GitHub Release from tag ${TAG_NAME}..."
-          # Uses the GitHub CLI to create a release from the existing tag.
-          # This action will trigger the separate 'publish.yml' workflow.
-          gh release create "$TAG_NAME" \
-            --title "Release ${TAG_NAME}" \
-            --notes "${{ needs.prepare.outputs.release_notes }}"
+  #   steps:
+  #     # This job's only step is to create a formal GitHub Release from the tag pushed by the 'prepare' job.
+  #     - name: Create GitHub Release from existing tag
+  #       env:
+  #         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provides authentication for the GitHub CLI
+  #       run: |
+  #         # Get the tag name from the previous job's output
+  #         TAG_NAME="v${{ needs.prepare.outputs.version }}"
+  #         echo "Found full release trigger. Creating GitHub Release from tag ${TAG_NAME}..."
+  #         # Uses the GitHub CLI to create a release from the existing tag.
+  #         # This action will trigger the separate 'publish.yml' workflow.
+  #         gh release create "$TAG_NAME" \
+  #           --title "Release ${TAG_NAME}" \
+  #           --notes "${{ needs.prepare.outputs.release_notes }}"
