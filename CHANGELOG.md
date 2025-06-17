@@ -3,7 +3,7 @@
 ## [0.3.14]
 
 - Released @ 6/2025 (UTC)
-- Update dependencies
+- Update dependencies 1
 
 ## [0.3.13+1]
 
