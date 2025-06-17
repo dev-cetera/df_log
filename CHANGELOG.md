@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.3.15]
+
+- Released @ 6/2025 (UTC)
+- feat: Shorten the location string in logs for cleaner output
+
 ## [0.3.14]
 
 - Released @ 6/2025 (UTC)
