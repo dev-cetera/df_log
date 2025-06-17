@@ -42,8 +42,8 @@ import 'package:df_log/df_log.dart';
 void main() {
   Log.start('Application starting...');
   Log.info('This is an informational message.');
-  Log.ok('User successfully authenticated!');
-  Log.alert('Network connection is slow!');
+  Log.ok('User successfully authenticated.');
+  Log.alert('Network connection is slow.');
   Log.err('Failed to load user data!');
   Log.stop('Application shutting down.');
 }
