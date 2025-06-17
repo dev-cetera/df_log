@@ -4,6 +4,7 @@
 
 - Released @ 6/2025 (UTC)
 - Update dependencies 1
+- Update dependencies 2
 
 ## [0.3.13+1]
 
