@@ -1,0 +1,165 @@
+##.title
+## ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+##
+## Dart/Flutter (DF) Packages by dev-cetera.com & contributors. The use of this
+## source code is governed by an MIT-style license described in the LICENSE
+## file located in this project's root directory.
+##
+## See: https://opensource.org/license/mit
+##
+## ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+##.title~
+
+name: Prepare Release
+
+## -----------------------------------------------------------------------------
+
+# Defines the events that trigger the workflow
+on:
+  push:
+    branches:
+      - main  # Workflow runs when code is pushed to the 'main' branch
+
+## -----------------------------------------------------------------------------
+
+# Defines the jobs to be executed in the workflow
+jobs:
+  prepare:
+    runs-on: ubuntu-latest  # Specifies the environment (Ubuntu) for the job
+    # NEW: Add permissions for the GitHub CLI to create a release from this workflow
+    permissions:
+      contents: write       # To push commits
+      pull-requests: write  # To create releases
+
+    steps:
+      # Step 1: Checkout the full repository history
+      - name: Checkout code
+        uses: actions/checkout@v3  # Uses the checkout action to clone the repository
+        with:
+          fetch-depth: 0  # Fetches the entire commit history for accurate versioning
+
+      # Step 2: Get the first line of the latest commit message
+      - name: Get commit message
+        id: get_commit  # Assigns an ID to reference outputs later
+        run: |
+          # Extracts the first line of the latest commit message
+          COMMIT_MSG=$(git log --format=%B -n 1 HEAD | head -n 1)
+          # Stores the commit message in the GitHub Actions output
+          echo "COMMIT_MSG=$COMMIT_MSG" >> $GITHUB_OUTPUT
+
+      # Step 3: Check for release/publish triggers
+      - name: Check for release triggers
+        id: check_message  # Assigns an ID to reference outputs later
+        run: |
+          COMMIT_MSG="${{ steps.get_commit.outputs.COMMIT_MSG }}"
+          # Checks if the commit message starts with one or more '+' to trigger preparation
+          if [[ "$COMMIT_MSG" == +* ]]; then
+            echo "SHOULD_PREPARE=true" >> $GITHUB_OUTPUT
+            echo "Release preparation triggered."
+          else
+            echo "SHOULD_PREPARE=false" >> $GITHUB_OUTPUT
+          fi
+          # Checks if the commit message starts with exactly '++' to trigger a full release
+          if [[ "$COMMIT_MSG" == ++* ]]; then
+            echo "IS_FULL_RELEASE=true" >> $GITHUB_OUTPUT
+            echo "Full release will be created."
+          else
+            echo "IS_FULL_RELEASE=false" >> $GITHUB_OUTPUT
+          fi
+
+      # Step 4: Set up Dart environment
+      - name: Set up Dart
+        if: steps.check_message.outputs.SHOULD_PREPARE == 'true'  # Only runs if preparation is triggered
+        uses: dart-lang/setup-dart@v1  # Installs the Dart SDK for subsequent steps
+
+      # Step 5: Fetch _README_TEMPLATE.md
+      - name: Fetch README Template
+        if: steps.check_message.outputs.SHOULD_PREPARE == 'true'  # Only runs if preparation is triggered
+        id: fetch_template # Assigns an ID to reference outputs later
+        run: |
+          # Clones the Dart package template repository to access the README template
+          git clone --depth 1 https://github.com/dev-cetera/dart_package_template.git /tmp/dart_package_template
+          # Stores the path to the README template in this step's output for other steps to use
+          echo "TEMPLATE_PATH=/tmp/dart_package_template/_README_TEMPLATE.md" >> $GITHUB_OUTPUT
+
+      # Step 6: Format and Fix Dart Code
+      - name: Format and Fix Dart Code
+        if: steps.check_message.outputs.SHOULD_PREPARE == 'true'  # Only runs if preparation is triggered
+        run: |
+          # Runs Dart formatter to standardize code formatting
+          dart format .
+          # Applies automatic fixes to Dart code for consistency
+          dart fix --apply
+
+      # Step 7: Extract package info from pubspec.yaml
+      - name: Extract package info from pubspec.yaml
+        if: steps.check_message.outputs.SHOULD_PREPARE == 'true'  # Only runs if preparation is triggered
+        id: get_package_info  # Assigns an ID to reference outputs later
+        run: |
+          # Extracts the version number from pubspec.yaml
+          VERSION=$(grep "version:" pubspec.yaml | sed 's/version: //')
+          # Extracts the package name from pubspec.yaml
+          PACKAGE_NAME=$(grep "name:" pubspec.yaml | sed 's/name: //')
+          # Stores version and package name in GitHub Actions output
+          echo "PUBSPEC_VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "PACKAGE_NAME=$PACKAGE_NAME" >> $GITHUB_OUTPUT
+
+      # Step 8: Update CHANGELOG.md
+      - name: Update CHANGELOG.md
+        if: steps.check_message.outputs.SHOULD_PREPARE == 'true'  # Only runs if preparation is triggered
+        run: |
+          # Cleans the commit message by removing leading '+' characters and trimming whitespace
+          RELEASE_NOTES=$(echo "${{ steps.get_commit.outputs.COMMIT_MSG }}" | sed 's/^\++//' | xargs)
+          # Runs a Dart script to update the changelog with the version and release notes
+          dart run .github/scripts/update_changelog.dart "${{ steps.get_package_info.outputs.PUBSPEC_VERSION }}" "$RELEASE_NOTES"
+
+      # Step 9: Generate README.md
+      - name: Generate README.md
+        if: steps.check_message.outputs.SHOULD_PREPARE == 'true'  # Only runs if preparation is triggered
+        run: |
+          # Runs a Dart script to generate README.md using the template path, package name, and version
+          dart run .github/scripts/update_readme.dart "${{ steps.fetch_template.outputs.TEMPLATE_PATH }}" "${{ steps.get_package_info.outputs.PACKAGE_NAME }}" "${{ steps.get_package_info.outputs.PUBSPEC_VERSION }}"
+
+      # Step 10: Commit and Push automated changes
+      - name: Commit and Push Changes
+        if: steps.check_message.outputs.SHOULD_PREPARE == 'true'  # Only runs if preparation is triggered
+        run: |
+          # Configures Git user for the automated commit
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          # Stages all changes
+          git add .
+          # Commits changes only if there are staged changes
+          if ! git diff --staged --quiet; then
+            git commit -m "ci: bump version to v${{ steps.get_package_info.outputs.PUBSPEC_VERSION }}"
+            # Rebases local changes to avoid race conditions before pushing
+            git pull --rebase
+            # Pushes the updated main branch to the remote repository
+            git push origin main
+          else
+            echo "No changes to commit."
+          fi
+      
+      # Step 11: Create a GitHub Release, which will trigger the separate 'publish.yml' workflow
+      - name: Create GitHub Release
+        if: steps.check_message.outputs.SHOULD_PREPARE == 'true'  # Only runs if preparation is triggered
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Provides authentication for the GitHub CLI
+        run: |
+          # Defines the tag name based on the package version
+          TAG_NAME="v${{ steps.get_package_info.outputs.PUBSPEC_VERSION }}"
+          # Cleans the commit message for use as release notes
+          RELEASE_NOTES=$(echo "${{ steps.get_commit.outputs.COMMIT_MSG }}" | sed 's/^\++//' | xargs)
+          
+          # Sets the --prerelease flag if the commit did not start with '++'
+          PRERELEASE_FLAG=""
+          if [[ "${{ steps.check_message.outputs.IS_FULL_RELEASE }}" == "false" ]]; then
+            PRERELEASE_FLAG="--prerelease"
+          fi
+          
+          echo "Creating release for tag ${TAG_NAME}..."
+          # Uses the GitHub CLI to create a release. This automatically creates the tag on the commit.
+          gh release create "$TAG_NAME" \
+            --title "Release ${TAG_NAME}" \
+            --notes "$RELEASE_NOTES" \
+            $PRERELEASE_FLAG
