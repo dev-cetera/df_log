@@ -8,6 +8,8 @@
 // ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 //title~
 
+import 'dart:math';
+
 import 'package:df_safer_dart/df_safer_dart.dart' show Here;
 import 'package:meta/meta.dart' show visibleForTesting;
 import 'dart:developer' as developer;
@@ -522,7 +524,8 @@ final class Log {
     // Maybe get the basepath.
     String? location;
     if (includePath) {
-      location = _shortenedLocation(Here(initialStackLevel).location.orNull());
+      final frame = Here(max(0, initialStackLevel - 1)).call().orNull();
+      location = _shortenedLocation(frame?.location, frame?.member);
     }
 
     // Combine tags with the tag from category.
@@ -578,7 +581,7 @@ typedef Glog = Log;
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
-String? _shortenedLocation(String? location) {
+String? _shortenedLocation(String? location, String? member) {
   if (location == null) {
     return null;
   }
@@ -590,7 +593,7 @@ String? _shortenedLocation(String? location) {
     final package = path.split(':')[1].split('/').first;
     return '$package:$file #$line';
   } else {
-    return '$file #$line';
+    return '$file/$member #$line';
   }
 }
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
