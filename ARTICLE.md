@@ -1,9 +1,4 @@
-
 [![banner](https://github.com/dev-cetera/df_log/blob/main/doc/assets/banner.png?raw=true)](https://github.com/dev-cetera)
-
-An honest, beginner-friendly look at df_log - a package that aims to make your console debugging, analytics, and crash reporting smarter, not just more complicated.
-
----
 
 If you're a Flutter developer, your journey started with `print()`. It's our oldest friend for debugging. We sprinkle it everywhere to check a variable, confirm a function was called, or see if a widget rebuilt.
 
@@ -177,6 +172,11 @@ void updateUserProfile() {
   }
 }
 ```
+
+This is what's printed:
+
+![Visual Studio Code Terminal](https://github.com/dev-cetera/df_log/blob/main/doc/assets/screenshot4.png?raw=true)
+
 The `LogItem.toMap()` or `LogItem.toJson()` function will output detailed information about the log, including a unique id, a timestamp and more:
 
 ```json
