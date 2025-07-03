@@ -17,9 +17,7 @@ void main() {
       // Compile the payload to send to your crash reporter.
       final payload = {
         'exception': logItem.message,
-        'extra': {
-          'breadcrumbs': history,
-        },
+        'extra': {'breadcrumbs': history},
       };
 
       // TODO: Send the payload to your crash reporter here!

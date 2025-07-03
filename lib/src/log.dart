@@ -554,7 +554,8 @@ final class Log {
     }
 
     // Only print if combinedTags is empty or any of combinedTags are in activeTags.
-    if (combinedTags.isNotEmpty && !activeTags.any((e) => combinedTags.contains(e))) {
+    if (combinedTags.isNotEmpty &&
+        !activeTags.any((e) => combinedTags.contains(e))) {
       return;
     }
 
