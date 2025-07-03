@@ -1,11 +1,11 @@
-Dart & Flutter Packages by [dev-cetera.com](https://dev-cetera.com) & contributors.
+[![banner](https://github.com/dev-cetera/df_log/blob/v0.3.25/doc/assets/banner.png?raw=true)](https://github.com/dev-cetera)
 
 [![pub](https://img.shields.io/pub/v/df_log.svg)](https://pub.dev/packages/df_log)
 [![tag](https://img.shields.io/badge/Tag-v0.3.25-purple?logo=github)](https://github.com/dev-cetera/df_log/tree/v0.3.25)
 
 [![buymeacoffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-FFDD00?logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/dev_cetera)
-[![sponsor](https://img.shields.io/badge/Sponsor-202020?logo=github-sponsors&logoColor=pink)](https://github.com/sponsors/dev-cetera)
-[![patreon](https://img.shields.io/badge/Patreon-202020?logo=patreon)](https://www.patreon.com/RobertMollentze)
+[![sponsor](https://img.shields.io/badge/Sponsor-grey?logo=github-sponsors&logoColor=pink)](https://github.com/sponsors/dev-cetera)
+[![patreon](https://img.shields.io/badge/Patreon-grey?logo=patreon)](https://www.patreon.com/RobertMollentze)
 
 [![discord](https://img.shields.io/badge/Discord-5865F2?logo=discord&logoColor=white)](https://discord.gg/gEQ8y2nfyX)
 [![instagram](https://img.shields.io/badge/Instagram-E4405F?logo=instagram&logoColor=white)](https://www.instagram.com/dev_cetera/)
@@ -13,8 +13,6 @@ Dart & Flutter Packages by [dev-cetera.com](https://dev-cetera.com) & contributo
 [![license](https://img.shields.io/badge/License-MIT-blue.svg)](https://raw.githubusercontent.com/dev-cetera/df_log/main/LICENSE)
 
 ---
-
-[![banner](https://github.com/dev-cetera/df_log/blob/v0.3.25/doc/assets/banner.png?raw=true)](https://github.com/dev-cetera)
 
 <!-- BEGIN _README_CONTENT -->
 
