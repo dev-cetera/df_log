@@ -10,11 +10,7 @@
 // ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 //.title~
 
-import 'dart:convert' show JsonEncoder;
-
-import 'package:uuid/uuid.dart';
-
-import 'ansi_styled_string.dart';
+import '/_common.dart';
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
@@ -25,6 +21,7 @@ final class LogItem {
 
   final String id;
   final DateTime timestamp;
+  final Frame? frame;
   final String? location;
   final String? icon;
   final Object? message;
@@ -43,15 +40,16 @@ final class LogItem {
   //
 
   LogItem({
-    this.location,
-    this.icon,
-    this.message,
-    this.tags = const {},
-    this.showId = false,
-    this.showTags = true,
-    this.showTimestamp = false,
-  }) : id = const Uuid().v4(),
-       timestamp = DateTime.now();
+    required this.location,
+    required this.icon,
+    required this.message,
+    required this.tags,
+    required this.showId,
+    required this.showTags,
+    required this.showTimestamp,
+    required this.frame,
+  })  : id = const Uuid().v4(),
+        timestamp = DateTime.now();
 
   //
   //
@@ -69,7 +67,6 @@ final class LogItem {
       buffer.write(location);
       if (showTimestamp) {
         final isoString = timestamp.toLocal().toIso8601String();
-        // Grabs 'HH:mm:ss.SSS'
         final timeStr = isoString.substring(11, 23);
         buffer.write(' @$timeStr');
       }
@@ -105,12 +102,8 @@ final class LogItem {
     final hasLocation = location1 != null && location1.isNotEmpty;
 
     if (hasLocation) {
-      final bracketStyle = nonMessageStyle != null
-          ? AnsiStyle.bold + nonMessageStyle
-          : null;
-      final pathTextStyle = nonMessageStyle != null
-          ? AnsiStyle.italic + nonMessageStyle
-          : null;
+      final bracketStyle = nonMessageStyle != null ? AnsiStyle.bold + nonMessageStyle : null;
+      final pathTextStyle = nonMessageStyle != null ? AnsiStyle.italic + nonMessageStyle : null;
       if (icon != null) {
         buffer.write('$icon ');
       }
@@ -127,8 +120,8 @@ final class LogItem {
 
     if (message != null) {
       final styledMessage = message.toString().trim().withAnsiStyle(
-        messageStyle,
-      );
+            messageStyle,
+          );
       buffer.write(styledMessage);
     }
 
@@ -149,14 +142,30 @@ final class LogItem {
   //
 
   Map<String, dynamic> toMap() {
+    final column = frame?.column;
+    final library = frame?.library;
+    final line = frame?.line;
+    final package = frame?.package;
+    final uri = frame?.uri.toString();
+
     return {
-      if (icon != null && (location != null && location!.isNotEmpty))
-        'icon': icon,
-      if (location != null && location!.isNotEmpty) 'location': location,
-      if (message != null) 'message': message.toString(),
+      'icon': icon != null && (location != null && location!.isNotEmpty) ? icon : null,
+      'location': location != null && location!.isNotEmpty ? location : null,
+      'message': () {
+        try {
+          return message?.toString();
+        } catch (e) {
+          return null;
+        }
+      }(),
       'timestamp': timestamp.toIso8601String(),
-      if (tags.isNotEmpty) 'tags': tags.map(_unmangleSymbol).toList(),
+      'tags': tags.isNotEmpty ? tags.map(_unmangleSymbol).toList() : null,
       'id': id,
+      'column': column,
+      'line': line,
+      'package': package,
+      'library': library,
+      'uri': uri,
     };
   }
 
@@ -166,9 +175,7 @@ final class LogItem {
 
   String toJson({bool pretty = true}) {
     final map = toMap();
-    final encoder = pretty
-        ? const JsonEncoder.withIndent('  ')
-        : const JsonEncoder();
+    final encoder = pretty ? const JsonEncoder.withIndent('  ') : const JsonEncoder();
     return encoder.convert(map);
   }
 

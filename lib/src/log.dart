@@ -8,14 +8,9 @@
 // ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 //title~
 
-import 'dart:math';
-
-import 'package:df_safer_dart/df_safer_dart.dart' show Here;
-import 'package:meta/meta.dart' show visibleForTesting;
 import 'dart:developer' as developer;
-import 'dart:collection' show Queue;
 
-import '_src.g.dart';
+import '/_common.dart';
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
@@ -47,7 +42,7 @@ final class Log {
   /// If `true`, new logs are added to the in-memory `items` queue.
   static var storeLogs = true;
 
-  static int _maxStoredLogs = 1000;
+  static int _maxStoredLogs = 50;
 
   /// The maximum number of logs to keep in memory. Older logs are discarded.
   static int get maxStoredLogs => _maxStoredLogs;
@@ -122,7 +117,7 @@ final class Log {
 
   @pragma('vm:prefer-inline')
   static _LogMessage trace(
-    dynamic message, [
+    Object? message, [
     Set<Symbol> tags = const {},
     @visibleForTesting int initialStackLevel = 0,
   ]) {
@@ -137,7 +132,7 @@ final class Log {
 
   @pragma('vm:prefer-inline')
   static _LogMessage err(
-    dynamic message, [
+    Object? message, [
     Set<Symbol> tags = const {},
     @visibleForTesting int initialStackLevel = 0,
   ]) {
@@ -152,7 +147,7 @@ final class Log {
 
   @pragma('vm:prefer-inline')
   static _LogMessage alert(
-    dynamic message, [
+    Object? message, [
     Set<Symbol> tags = const {},
     @visibleForTesting int initialStackLevel = 0,
   ]) {
@@ -167,7 +162,7 @@ final class Log {
 
   @pragma('vm:prefer-inline')
   static _LogMessage ignore(
-    dynamic message, [
+    Object? message, [
     Set<Symbol> tags = const {},
     @visibleForTesting int initialStackLevel = 0,
   ]) {
@@ -183,7 +178,7 @@ final class Log {
 
   @pragma('vm:prefer-inline')
   static _LogMessage ok(
-    dynamic message, [
+    Object? message, [
     Set<Symbol> tags = const {},
     @visibleForTesting int initialStackLevel = 0,
   ]) {
@@ -198,7 +193,7 @@ final class Log {
 
   @pragma('vm:prefer-inline')
   static _LogMessage start(
-    dynamic message, [
+    Object? message, [
     Set<Symbol> tags = const {},
     @visibleForTesting int initialStackLevel = 0,
   ]) {
@@ -213,7 +208,7 @@ final class Log {
 
   @pragma('vm:prefer-inline')
   static _LogMessage stop(
-    dynamic message, [
+    Object? message, [
     Set<Symbol> tags = const {},
     @visibleForTesting int initialStackLevel = 0,
   ]) {
@@ -228,7 +223,7 @@ final class Log {
 
   @pragma('vm:prefer-inline')
   static _LogMessage info(
-    dynamic message, [
+    Object? message, [
     Set<Symbol> tags = const {},
     @visibleForTesting int initialStackLevel = 0,
   ]) {
@@ -243,7 +238,7 @@ final class Log {
 
   @pragma('vm:prefer-inline')
   static _LogMessage message(
-    dynamic message, [
+    Object? message, [
     Set<Symbol> tags = const {},
     @visibleForTesting int initialStackLevel = 0,
   ]) {
@@ -523,9 +518,10 @@ final class Log {
   }) {
     // Maybe get the basepath.
     String? location;
+    Frame? frame;
     if (includePath) {
-      final frame = Here(max(0, initialStackLevel - 1)).call().orNull();
-      location = _shortenedLocation(frame?.location, frame?.member);
+      frame = Here(max(0, initialStackLevel - 1)).call().orNull();
+      location = _shortLocation(frame?.location, frame?.member);
     }
 
     // Combine tags with the tag from category.
@@ -540,6 +536,7 @@ final class Log {
       showId: showIds,
       showTags: showTags,
       showTimestamp: showTimestamps,
+      frame: frame,
     );
 
     // Remove old logs.
@@ -556,9 +553,8 @@ final class Log {
       callback(logItem);
     }
 
-    // Only print if combinedTags is empty or all of combinedTags are in activeTags.
-    if (combinedTags.isNotEmpty && !activeTags.containsAll(combinedTags)) {
-      // TODO: Or just use contains?
+    // Only print if combinedTags is empty or any of combinedTags are in activeTags.
+    if (combinedTags.isNotEmpty && !activeTags.any((e) => combinedTags.contains(e))) {
       return;
     }
 
@@ -582,7 +578,7 @@ typedef Glog = Log;
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
-String? _shortenedLocation(String? location, String? member) {
+String? _shortLocation(String? location, String? member) {
   if (location == null) {
     return null;
   }
@@ -597,6 +593,7 @@ String? _shortenedLocation(String? location, String? member) {
     return '$file/$member #$line';
   }
 }
+
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
 enum _IconCategory {

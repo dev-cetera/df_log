@@ -1,28 +1,18 @@
-//.title
-// ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-//
-// Dart/Flutter (DF) Packages by dev-cetera.com & contributors. The use of this
-// source code is governed by an MIT-style license described in the LICENSE
-// file located in this project's root directory.
-//
-// See: https://opensource.org/license/mit
-//
-// ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-//.title~
-
 import 'package:df_log/df_log.dart';
-
-// ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
 void main() {
   Log.start('Application starting...');
-  Log.info('This is an informational message.');
-  Log.ok('User successfully authenticated.');
-  Log.alert('Network connection is slow.');
-  Log.err('Failed to load user data!');
+  Log.info('Checking for user session...');
+  Log.alert('Network connection is slow. Retrying in 5s.');
+  Log.ok('User session found and validated.');
+  Log.err('Failed to load user preferences!');
   Log.stop('Application shutting down.');
-  Log.printRed('printRed: This is an important error.');
-  Log.printGreen('printGreen: Operation was successful.');
-  Log.printYellow('printYellow: This is a warning.');
-  print(Log.items.map((e) => e.toJson()));
+  Log.printRed('This is printed in RED!');
+  Log.printGreen('This is printed in GREEN!');
+  Log.printBlue('This is printed in BLUE!');
+  Log.printYellow('This is printed in YELLOW!');
+  Log.printCyan('This is printed in CYAN!');
+  Log.printPurple('This is printed in PURPLE!');
+  Log.printBlack('This is printed in BLACK!');
+  Log.printWhite('This is printed in WHITE!');
 }
