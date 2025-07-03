@@ -11,7 +11,7 @@ Dart & Flutter Packages by dev-cetera.com & contributors.
 
 ---
 
-[![banner](https://github.com/dev-cetera/df_safer_dart/blob/v0.3.21/doc/assets/banner.png?raw=true)](https://github.com/dev-cetera)
+[![banner](https://github.com/dev-cetera/df_log/blob/v0.3.21/doc/assets/banner.png?raw=true)](https://github.com/dev-cetera)
 
 <!-- BEGIN _README_CONTENT -->
 
@@ -20,7 +20,7 @@ Dart & Flutter Packages by dev-cetera.com & contributors.
 
 <img src="https://raw.githubusercontent.com/dev-cetera/df_log/main/doc/assets/screenshot2.png" alt="Visual Studio Code Terminal" width="600">
 
-## Features
+## ✨ Core Features
 
 - **Categorized Logging:** Pre-defined methods like `Log.info`, `Log.err`, `Log.ok` for semantic logging.
 - **Beautifully Styled Output:** Uses ANSI colors and emojis for clear, readable logs in supported consoles.
@@ -39,10 +39,9 @@ For an introduction, please refer to this article:
 - **DEV.TO** [Dart Logging: Your New Best Friend](https://dev.to/dev_cetera/dart-logging-your-new-best-friebd-ae1)
 - **GITHUB** [Dart Logging: Your New Best Friend](https://github.com/dev-cetera/df_log/blob/main/ARTICLE.md)
 
+## 📖 Summary
 
-## Usage
-
-### 1. Categorized Logs
+## 1. Categorized Logs
 
 The package comes with a few default log types that you can use creatively.
 
