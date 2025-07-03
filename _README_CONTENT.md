@@ -1,5 +1,8 @@
 `df_log` is a massive upgrade from `print()`. It makes your console output beautiful, readable, and powerful, turning your logs into a central event bus for debugging, analytics, and crash reporting. It’s for the developer who wants the simplicity of `print()` but with more clarity, context, and control.
 
+
+<img src="https://raw.githubusercontent.com/dev-cetera/df_log/main/doc/assets/screenshot2.png" alt="Visual Studio Code Terminal" width="600">
+
 ## Features
 
 - **Categorized Logging:** Pre-defined methods like `Log.info`, `Log.err`, `Log.ok` for semantic logging.
@@ -10,10 +13,6 @@
 - **Customizable Output:** Show or hide timestamps, log IDs, and tags.
 - **IDE Integration:** Optionally uses `dart:developer`'s `log` function for a richer experience in some IDEs.
 - **Extensible:** Add custom callbacks to integrate with other services (e.g., crash reporting).
-
-## Screenshot
-
-<img src="https://raw.githubusercontent.com/dev-cetera/df_log/main/example/example.png" alt="Example image" width="400">
 
 ## 🚀 Getting Started
 
@@ -35,10 +34,10 @@ import 'package:df_log/df_log.dart';
 
 void main() {
   Log.start('Application starting...');
-  Log.info('This is an informational message.');
-  Log.ok('User successfully authenticated.');
-  Log.alert('Network connection is slow.');
-  Log.err('Failed to load user data!');
+  Log.info('Checking for user session...');
+  Log.alert('Network connection is slow. Retrying in 5s.');
+  Log.ok('User session found and validated.');
+  Log.err('Failed to load user preferences!');
   Log.stop('Application shutting down.');
 }
 ```
@@ -48,15 +47,15 @@ void main() {
 Colored logs enhance readability and help you quickly identify different types of messages in the console. By applying distinct colors, you can easily track errors, successes, warnings, and other log types at a glance.
 
 ```dart
-// If the Log class conflicts with another class, use an alias with as.
-import 'package:df_log/df_log.dart' as df;
-
-void main() {
-  df.Log.printRed('This is an important error.');
-  df.Log.printGreen('Operation was successful.');
-  df.Log.printYellow('This is a warning.');
-  // and many more...
-}
+Log.printRed('This is printed in RED!');
+Log.printGreen('This is printed in GREEN!');
+Log.printBlue('This is printed in BLUE!');
+Log.printYellow('This is printed in YELLOW!');
+Log.printCyan('This is printed in CYAN!');
+Log.printPurple('This is printed in PURPLE!');
+Log.printBlack('This is printed in BLACK!');
+Log.printWhite('This is printed in WHITE!');
+// and many more...
 ```
 
 ### 3. Tags
