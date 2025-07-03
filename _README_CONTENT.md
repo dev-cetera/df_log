@@ -23,6 +23,8 @@ For an introduction, please refer to this article:
 - **DEV.TO** [Dart Logging: Your New Best Friend](https://dev.to/dev_cetera/dart-logging-your-new-best-friebd-ae1)
 - **GITHUB** [Dart Logging: Your New Best Friend](https://github.com/dev-cetera/df_log/blob/main/ARTICLE.md)
 
+## 🧐 Overview
+
 ### 💡 1. Categorized Logs
 
 The package comes with a few default log types that you can use creatively.
