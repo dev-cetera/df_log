@@ -6,21 +6,18 @@ Dart & Flutter Packages by dev-cetera.com & contributors.
 [![sponsor](https://img.shields.io/badge/sponsor-grey?logo=github-sponsors)](https://github.com/sponsors/dev-cetera)
 [![patreon](https://img.shields.io/badge/patreon-grey?logo=patreon)](https://www.patreon.com/c/RobertMollentze)
 [![pub](https://img.shields.io/pub/v/df_log.svg)](https://pub.dev/packages/df_log)
-[![tag](https://img.shields.io/badge/tag-v0.3.22-purple?logo=github)](https://github.com/dev-cetera/df_log/tree/v0.3.22)
+[![tag](https://img.shields.io/badge/tag-v0.3.23-purple?logo=github)](https://github.com/dev-cetera/df_log/tree/v0.3.23)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/dev-cetera/df_log/main/LICENSE)
 
 ---
 
-[![banner](https://github.com/dev-cetera/df_log/blob/v0.3.22/doc/assets/banner.png?raw=true)](https://github.com/dev-cetera)
+[![banner](https://github.com/dev-cetera/df_log/blob/v0.3.23/doc/assets/banner.png?raw=true)](https://github.com/dev-cetera)
 
 <!-- BEGIN _README_CONTENT -->
 
 `df_log` is a massive upgrade from `print()`. It makes your console output beautiful, readable, and powerful, turning your logs into a central event bus for debugging, analytics, and crash reporting. It’s for the developer who wants the simplicity of `print()` but with more clarity, context, and control.
 
-
-<img src="https://raw.githubusercontent.com/dev-cetera/df_log/main/doc/assets/screenshot2.png" alt="Visual Studio Code Terminal" width="600">
-
-## Features
+## ✨ Features
 
 - **Categorized Logging:** Pre-defined methods like `Log.info`, `Log.err`, `Log.ok` for semantic logging.
 - **Beautifully Styled Output:** Uses ANSI colors and emojis for clear, readable logs in supported consoles.
@@ -40,9 +37,11 @@ For an introduction, please refer to this article:
 - **GITHUB** [Dart Logging: Your New Best Friend](https://github.com/dev-cetera/df_log/blob/main/ARTICLE.md)
 
 
-## Usage
+## 📖 Usage
 
-### 1. Categorized Logs
+<img src="https://raw.githubusercontent.com/dev-cetera/df_log/main/doc/assets/screenshot2.png" alt="Visual Studio Code Terminal" width="600">
+
+### 💡 1. Categorized Logs
 
 The package comes with a few default log types that you can use creatively.
 
@@ -59,7 +58,7 @@ void main() {
 }
 ```
 
-### 2. Colored Logs
+### 💡 2. Colored Logs
 
 Colored logs enhance readability and help you quickly identify different types of messages in the console. By applying distinct colors, you can easily track errors, successes, warnings, and other log types at a glance.
 
@@ -75,7 +74,7 @@ Log.printWhite('This is printed in WHITE!');
 // and many more...
 ```
 
-### 3. Tags
+### 💡 3. Tags
 
 Using tags with logs simplifies debugging and organization. Tags allow you to filter logs by including or excluding specific categories, making it easier to focus on relevant information. They can also help categorize data for analytics or other purposes.
 
@@ -102,7 +101,7 @@ void main() {
 }
 ```
 
-### 3. Configuration
+### 💡 3. Configuration
 
 You can customize the logging behavior to suit your needs, including styling, output format, and storage options. The Log class provides various settings to control how logs are displayed and managed.
 
