@@ -1,7 +1,7 @@
 Dart & Flutter Packages by [dev-cetera.com](https://dev-cetera.com) & contributors.
 
 [![pub](https://img.shields.io/pub/v/df_log.svg)](https://pub.dev/packages/df_log)
-[![tag](https://img.shields.io/badge/Tag-v0.3.24-purple?logo=github)](https://github.com/dev-cetera/df_log/tree/v0.3.24)
+[![tag](https://img.shields.io/badge/Tag-v0.3.25-purple?logo=github)](https://github.com/dev-cetera/df_log/tree/v0.3.25)
 
 [![buymeacoffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-FFDD00?logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/dev_cetera)
 [![sponsor](https://img.shields.io/badge/Sponsor-202020?logo=github-sponsors&logoColor=pink)](https://github.com/sponsors/dev-cetera)
@@ -14,7 +14,7 @@ Dart & Flutter Packages by [dev-cetera.com](https://dev-cetera.com) & contributo
 
 ---
 
-[![banner](https://github.com/dev-cetera/df_log/blob/v0.3.24/doc/assets/banner.png?raw=true)](https://github.com/dev-cetera)
+[![banner](https://github.com/dev-cetera/df_log/blob/v0.3.25/doc/assets/banner.png?raw=true)](https://github.com/dev-cetera)
 
 <!-- BEGIN _README_CONTENT -->
 
@@ -42,6 +42,8 @@ For an introduction, please refer to this article:
 - **MEDIUM.COM** [Dart Logging: Your New Best Friend](https://medium.com/@dev-cetera/dart-logging-your-new-best-friend-7e0dbd701dc7)
 - **DEV.TO** [Dart Logging: Your New Best Friend](https://dev.to/dev_cetera/dart-logging-your-new-best-friebd-ae1)
 - **GITHUB** [Dart Logging: Your New Best Friend](https://github.com/dev-cetera/df_log/blob/main/ARTICLE.md)
+
+## 🧐 Overview
 
 ### 💡 1. Categorized Logs
 
