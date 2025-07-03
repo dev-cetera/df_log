@@ -6,12 +6,12 @@ Dart & Flutter Packages by dev-cetera.com & contributors.
 [![sponsor](https://img.shields.io/badge/sponsor-grey?logo=github-sponsors)](https://github.com/sponsors/dev-cetera)
 [![patreon](https://img.shields.io/badge/patreon-grey?logo=patreon)](https://www.patreon.com/c/RobertMollentze)
 [![pub](https://img.shields.io/pub/v/df_log.svg)](https://pub.dev/packages/df_log)
-[![tag](https://img.shields.io/badge/tag-v0.3.21-purple?logo=github)](https://github.com/dev-cetera/df_log/tree/v0.3.21)
+[![tag](https://img.shields.io/badge/tag-v0.3.22-purple?logo=github)](https://github.com/dev-cetera/df_log/tree/v0.3.22)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/dev-cetera/df_log/main/LICENSE)
 
 ---
 
-[![banner](https://github.com/dev-cetera/df_log/blob/v0.3.21/doc/assets/banner.png?raw=true)](https://github.com/dev-cetera)
+[![banner](https://github.com/dev-cetera/df_log/blob/v0.3.22/doc/assets/banner.png?raw=true)](https://github.com/dev-cetera)
 
 <!-- BEGIN _README_CONTENT -->
 
@@ -20,7 +20,7 @@ Dart & Flutter Packages by dev-cetera.com & contributors.
 
 <img src="https://raw.githubusercontent.com/dev-cetera/df_log/main/doc/assets/screenshot2.png" alt="Visual Studio Code Terminal" width="600">
 
-## ✨ Core Features
+## Features
 
 - **Categorized Logging:** Pre-defined methods like `Log.info`, `Log.err`, `Log.ok` for semantic logging.
 - **Beautifully Styled Output:** Uses ANSI colors and emojis for clear, readable logs in supported consoles.
@@ -39,9 +39,10 @@ For an introduction, please refer to this article:
 - **DEV.TO** [Dart Logging: Your New Best Friend](https://dev.to/dev_cetera/dart-logging-your-new-best-friebd-ae1)
 - **GITHUB** [Dart Logging: Your New Best Friend](https://github.com/dev-cetera/df_log/blob/main/ARTICLE.md)
 
-## 📖 Summary
 
-## 1. Categorized Logs
+## Usage
+
+### 1. Categorized Logs
 
 The package comes with a few default log types that you can use creatively.
 

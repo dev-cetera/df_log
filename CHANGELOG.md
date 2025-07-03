@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.3.22]
+
+- Released @ 7/2025 (UTC)
+- Update readme
+
 ## [0.3.21]
 
 - Released @ 7/2025 (UTC)
