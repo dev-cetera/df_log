@@ -18,7 +18,7 @@ funding:
 - https://www.patreon.com/RobertMollentze
 - https://github.com/sponsors/robmllze
 description: A package that provides logging utilities for better debugging.
-version: 0.3.22
+version: 0.3.23
 topics:
   - console
   - debugging
