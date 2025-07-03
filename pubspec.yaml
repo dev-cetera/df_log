@@ -15,7 +15,7 @@ homepage: https://dev-cetera.com/
 repository: https://github.com/robmllze/df_log
 funding:
 - https://www.buymeacoffee.com/dev_cetera
-- https://www.patreon.com/c/RobertMollentze
+- https://www.patreon.com/RobertMollentze
 - https://github.com/sponsors/robmllze
 description: A package that provides logging utilities for better debugging.
 version: 0.3.21

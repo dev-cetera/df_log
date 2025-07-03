@@ -1,5 +1,5 @@
 
-[![banner](https://github.com/dev-cetera/df_log/blob/v0.3.20/doc/assets/banner.png?raw=true)](https://github.com/dev-cetera)
+[![banner](https://github.com/dev-cetera/df_log/blob/main/doc/assets/banner.png?raw=true)](https://github.com/dev-cetera)
 
 An honest, beginner-friendly look at df_log - a package that aims to make your console debugging, analytics, and crash reporting smarter, not just more complicated.
 
@@ -43,7 +43,7 @@ void main() {
 
 This is what's printed:
 
-[![Visual Studio Code Terminal](https://github.com/dev-cetera/df_log/blob/v0.3.20/doc/assets/screenshot1.png?raw=true)](https://github.com/dev-cetera)
+![Visual Studio Code Terminal](https://github.com/dev-cetera/df_log/blob/main/doc/assets/screenshot1.png?raw=true)
 
 This is the first "Aha!" moment. You instantly get three upgrades:
 
@@ -83,7 +83,7 @@ void main() {
 
 This is what's printed:
 
-Visual Studio Code Terminal
+![Visual Studio Code Terminal](https://github.com/dev-cetera/df_log/blob/main/doc/assets/screenshot2.png?raw=true)
 
 ### 2. Precision Filtering with Tags
 
@@ -118,7 +118,7 @@ void main() {
 
 This is what's printed:
 
-Visual Studio Code Terminal
+![Visual Studio Code Terminal](https://github.com/dev-cetera/df_log/blob/main/doc/assets/screenshot3.png?raw=true)
 
 As you can see, we can use `Log.activeTags`, `Log.addTags` and `Log.removeTags` to add or remove any tags we like. Typically for debugging, it's best to just specify which tags you want active at the start of your main function.
 

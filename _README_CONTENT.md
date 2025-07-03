@@ -1,6 +1,4 @@
-## Summary
-
-A package that provides a simple, powerful, and beautiful logging utility for better debugging in Dart and Flutter.
+`df_log` is a massive upgrade from `print()`. It makes your console output beautiful, readable, and powerful, turning your logs into a central event bus for debugging, analytics, and crash reporting. It’s for the developer who wants the simplicity of `print()` but with more clarity, context, and control.
 
 ## Features
 
@@ -16,6 +14,15 @@ A package that provides a simple, powerful, and beautiful logging utility for be
 ## Screenshot
 
 <img src="https://raw.githubusercontent.com/dev-cetera/df_log/main/example/example.png" alt="Example image" width="400">
+
+## 🚀 Getting Started
+
+For an introduction, please refer to this article:
+
+- **MEDIUM.COM** [Dart Logging: Your New Best Friend](https://medium.com/@dev-cetera/dart-logging-your-new-best-friend-7e0dbd701dc7)
+- **DEV.TO** [Dart Logging: Your New Best Friend](https://dev.to/dev_cetera/dart-logging-your-new-best-friebd-ae1)
+- **GITHUB** [Dart Logging: Your New Best Friend](https://github.com/dev-cetera/df_log/blob/main/ARTICLE.md)
+
 
 ## Usage
 

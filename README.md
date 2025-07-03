@@ -11,11 +11,9 @@ Dart & Flutter Packages by dev-cetera.com & contributors.
 
 ---
 
-[![banner](https://github.com/dev-cetera/df_safer_dart/blob/v0.3.20/doc/assets/banner.png?raw=true)](https://github.com/dev-cetera)
+[![banner](https://github.com/dev-cetera/df_log/blob/v0.3.20/doc/assets/banner.png?raw=true)](https://github.com/dev-cetera)
 
 <!-- BEGIN _README_CONTENT -->
-
-## Summary
 
 A package that provides a simple, powerful, and beautiful logging utility for better debugging in Dart and Flutter.
 
