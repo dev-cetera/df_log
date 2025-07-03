@@ -134,16 +134,17 @@ When a crash happens, the error message is only half the story. The other half i
 
 ```dart
 void main() {
-  // 1. Configure [df_log](https://pub.dev/packages/df_log) to keep the last 50 log events in memory.
+  // Configure [df_log](https://pub.dev/packages/df_log) to keep the last 50
+  // log events in memory.
   Log.maxStoredLogs = 50;
 
-  // 2. Set up a callback for crash reporting.
+  // Set up a callback for crash reporting.
   Log.addCallback((logItem) {
     // We only care about logs that are tagged as errors.
     if (logItem.tags.contains(#error)) {
       // Get the history of recent events.
       final history = Log.items.map((item) => item.toMap()).toList();
-      
+
       // Compile the payload to send to your crash reporter.
       final payload = {
         'exception': logItem.message,
@@ -156,7 +157,10 @@ void main() {
     }
   });
 
-  runApp(MyApp());
+  // runApp(MyApp());
+
+  // Somewhere else in your code...
+  updateUserProfile();
 }
 
 // Somewhere else in your code...
@@ -169,7 +173,7 @@ void updateUserProfile() {
     // This single line now does two things:
     // 1. Prints the error to the console for you.
     // 2. Triggers the callback to send a crash report WITH breadcrumbs.
-    Log.err('Failed to update profile: $e', {#error, #profile, #network});
+    Log.err('Failed to update profile: $e', {#profile, #network});
   }
 }
 ```
@@ -177,38 +181,46 @@ The `LogItem.toMap()` or `LogItem.toJson()` function will output detailed inform
 
 ```json
 {
-  "icon": "🟣",
-  "location": "example/updateUserProfile #32",
-  "message": "Navigated to profile screen.",
-  "timestamp": "2025-07-03T04:03:39.517345",
-  "tags": [
-    "ui",
-    "profile",
-    "info"
-  ],
-  "id": "186abf74-6ace-40ec-89f5-90edce1fb48c",
-  "column": 7,
-  "line": 32,
-  "package": null,
-  "library": "example/example.dart",
-  "uri": "file:///Users/robmllze/Projects/flutter/dev_cetera/df_packages/packages/df_log/example/example.dart"
-}
-{
-  "icon": "🔴",
-  "location": "example/updateUserProfile #39",
-  "message": "Failed to update profile: Exception: Connection timed out",
-  "timestamp": "2025-07-03T04:03:39.521080",
-  "tags": [
-    "error",
-    "profile",
-    "network"
-  ],
-  "id": "b465efdd-1add-4f39-843c-ab98e55dc18b",
-  "column": 9,
-  "line": 39,
-  "package": null,
-  "library": "example/example.dart",
-  "uri": "file:///Users/robmllze/Projects/flutter/dev_cetera/df_packages/packages/df_log/example/example.dart"
+  "exception": "Failed to update profile: Exception: Connection timed out",
+  "extra": {
+    "breadcrumbs": [
+      {
+        "icon": "🟣",
+        "location": "screenshot3/updateUserProfile #36",
+        "message": "Navigated to profile screen.",
+        "timestamp": "2025-07-03T18:24:08.514177",
+        "tags": [
+          "ui",
+          "profile",
+          "info"
+        ],
+        "id": "7861c3f3-1dda-457f-acb8-252c205b0426",
+        "column": 7,
+        "line": 36,
+        "package": null,
+        "library": "example/screenshot3.dart",
+        "uri": "file:///Users/robmllze/Projects/flutter/dev_cetera/df_packages/packages/df_log/example/screenshot3.dart"
+      },
+      {
+        "icon": "🔴",
+        "location": "screenshot3/updateUserProfile #44",
+        "message": "Failed to update profile: Exception: Connection timed out",
+        "timestamp": "2025-07-03T18:24:08.518744",
+        "tags": [
+          "error",
+          "profile",
+          "network",
+          "err"
+        ],
+        "id": "baa41fc7-2a55-44b7-b43c-ec8acd20f031",
+        "column": 9,
+        "line": 44,
+        "package": null,
+        "library": "example/screenshot3.dart",
+        "uri": "file:///Users/robmllze/Projects/flutter/dev_cetera/df_packages/packages/df_log/example/screenshot3.dart"
+      }
+    ]
+  }
 }
 ```
 
@@ -252,35 +264,35 @@ Here is a quick reference to all the main features available.
 
 ### Main Logging Methods
 
-Log.info(msg, [tags]): For general informational messages. (🟣)
-Log.ok(msg, [tags]): For success operations. (🟢)
-Log.err(msg, [tags]): For errors or exceptions. (🔴)
-Log.alert(msg, [tags]): For warnings that need attention. (🟠)
-Log.start(msg, [tags]): To mark the beginning of a process. (🔵)
-Log.stop(msg, [tags]): To mark the end of a process. (⚫)
-Log.trace(msg, [tags]): For fine-grained debugging information. (⚪️)
-Log.printGreen(message): Prints a message in a specific color without any other formatting. Many other colors are available (printRed, printYellow, printBlue, etc.).
+- `Log.info(msg, [tags])`: For general informational messages. (🟣)
+- `Log.ok(msg, [tags])`: For success operations. (🟢)
+- `Log.err(msg, [tags])`: For errors or exceptions. (🔴)
+- `Log.alert(msg, [tags])`: For warnings that need attention. (🟠)
+- `Log.start(msg, [tags])`: To mark the beginning of a process. (🔵)
+- `Log.stop(msg, [tags])`: To mark the end of a process. (⚫)
+- `Log.trace(msg, [tags])`: For fine-grained debugging information. (⚪️)
+- `Log.printGreen(message)`: Prints a message in a specific color without any other formatting. Many other colors are available (`printRed`, `printYellow`, `printBlue`, etc.).
 
 ### Configuration (Static Properties on Log)
 
-Log.enableStyling = true: Enables/disables ANSI colors and icons. Set this to false if your terminal does not supprt ANSI colors.
-Log.showTimestamps = true: Shows a HH:mm:ss.SSS timestamp on each log.
-Log.showTags = true: Shows tags like #auth #ui on each log.
-Log.showIds = false: Shows a unique ID on each log.
-Log.enableReleaseAsserts = false: By default, logs only work in debug mode. Set to true to enable logging in release builds (use with caution).
+- `Log.enableStyling = true`: Enables/disables ANSI colors and icons. Set this to false if your terminal does not supprt ANSI colors.
+- `Log.showTimestamps = true`: Shows a HH:mm:ss.SSS timestamp on each log.
+- `Log.showTags = true`: Shows tags like #auth #ui on each log.
+- `Log.showIds = false`: Shows a unique ID on each log.
+- `Log.enableReleaseAsserts = false`: By default, logs only work in debug mode. Set to true to enable logging in release builds (use with caution).
 
 ### In-Memory Storage & Callbacks
 
-Log.storeLogs = true: If true, keeps a history of logs in memory.
-Log.maxStoredLogs = 50: Sets the max number of LogItem objects to store.
-Log.items: A Queue<LogItem> containing the stored logs.
-Log.addCallback(callback): Registers a function void Function(LogItem item) that runs for every log.
-Log.removeCallback(callback): Removes a previously registered callback.
+- `Log.storeLogs = true`: If true, keeps a history of logs in memory.
+- `Log.maxStoredLogs = 50`: Sets the max number of LogItem objects to store.
+- `Log.items`: A `Queue<LogItem>` containing the stored logs.
+- `Log.addCallback(callback)`: Registers a function void `Function(LogItem item)` that runs for every log.
+- `Log.removeCallback(callback)`: Removes a previously registered callback.
 
 ### Advanced Output
 
-Log.useDeveloperLog(): Switches output to dart:developer's log function for a richer experience in some IDEs.
-Log.useStandardPrint(): Reverts the output to the standard print function.
+- `Log.useDeveloperLog()`: Switches output to **dart:developer's** log function for a richer experience in some IDEs.
+- `Log.useStandardPrint()`: Reverts the output to the standard print function.
 
 ---
 

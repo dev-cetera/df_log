@@ -11,6 +11,10 @@
 - **IDE Integration:** Optionally uses `dart:developer`'s `log` function for a richer experience in some IDEs.
 - **Extensible:** Add custom callbacks to integrate with other services (e.g., crash reporting).
 
+## 📸 Screenshot
+
+<img src="https://raw.githubusercontent.com/dev-cetera/df_log/main/doc/assets/example.png" alt="Visual Studio Code Terminal" width="600">
+
 ## 🚀 Getting Started
 
 For an introduction, please refer to this article:
@@ -18,11 +22,6 @@ For an introduction, please refer to this article:
 - **MEDIUM.COM** [Dart Logging: Your New Best Friend](https://medium.com/@dev-cetera/dart-logging-your-new-best-friend-7e0dbd701dc7)
 - **DEV.TO** [Dart Logging: Your New Best Friend](https://dev.to/dev_cetera/dart-logging-your-new-best-friebd-ae1)
 - **GITHUB** [Dart Logging: Your New Best Friend](https://github.com/dev-cetera/df_log/blob/main/ARTICLE.md)
-
-
-## 📖 Usage
-
-<img src="https://raw.githubusercontent.com/dev-cetera/df_log/main/doc/assets/screenshot2.png" alt="Visual Studio Code Terminal" width="600">
 
 ### 💡 1. Categorized Logs
 

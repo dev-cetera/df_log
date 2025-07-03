@@ -15,5 +15,4 @@ void main() {
   Log.printPurple('This is printed in PURPLE!');
   Log.printBlack('This is printed in BLACK!');
   Log.printWhite('This is printed in WHITE!');
-  Log.printWhite(Log.items.map((e) => e.toJson()));
 }

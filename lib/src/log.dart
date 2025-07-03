@@ -138,7 +138,7 @@ final class Log {
   ]) {
     return log(
       message: message,
-      category: _IconCategory.ERROR,
+      category: _IconCategory.ERR,
       tags: tags,
       nonMessageStyle: AnsiStyle.fgLightBlack,
       initialStackLevel: initialStackLevel,
@@ -554,8 +554,7 @@ final class Log {
     }
 
     // Only print if combinedTags is empty or any of combinedTags are in activeTags.
-    if (combinedTags.isNotEmpty &&
-        !activeTags.any((e) => combinedTags.contains(e))) {
+    if (combinedTags.isNotEmpty && !activeTags.any((e) => combinedTags.contains(e))) {
       return;
     }
 
@@ -603,7 +602,7 @@ enum _IconCategory {
   //
 
   TRACE('⚪️', #trace),
-  ERROR('🔴', #error),
+  ERR('🔴', #err),
   ALERT('🟠', #alert),
   IGNORE('🟡', #ignore),
   OK('🟢', #ok),
