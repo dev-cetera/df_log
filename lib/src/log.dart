@@ -558,6 +558,7 @@ final class Log {
 
     // Only print if combinedTags is empty or all of combinedTags are in activeTags.
     if (combinedTags.isNotEmpty && !activeTags.containsAll(combinedTags)) {
+      // TODO: Or just use contains?
       return;
     }
 
