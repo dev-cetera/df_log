@@ -20,7 +20,7 @@ void main() {
         'extra': {'breadcrumbs': history},
       };
 
-      // TODO: Send the payload to your crash reporter here!
+      // ---> ---> Send the payload to your crash reporter here! <--- <---
     }
   });
 
