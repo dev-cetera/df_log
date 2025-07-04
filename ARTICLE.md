@@ -186,7 +186,7 @@ The `LogItem.toMap()` or `LogItem.toJson()` function will output detailed inform
     "breadcrumbs": [
       {
         "icon": "🟣",
-        "location": "screenshot3/updateUserProfile #36",
+        "location": "my_app/updateUserProfile #36",
         "message": "Navigated to profile screen.",
         "timestamp": "2025-07-03T18:24:08.514177",
         "tags": [
@@ -198,12 +198,12 @@ The `LogItem.toMap()` or `LogItem.toJson()` function will output detailed inform
         "column": 7,
         "line": 36,
         "package": null,
-        "library": "example/screenshot3.dart",
-        "uri": "file:///Users/robmllze/Projects/flutter/dev_cetera/df_packages/packages/df_log/example/screenshot3.dart"
+        "library": "example/my_app.dart",
+        "uri": "file:///Users/robmllze/Projects/flutter/dev_cetera/df_packages/packages/df_log/example/my_app.dart"
       },
       {
         "icon": "🔴",
-        "location": "screenshot3/updateUserProfile #44",
+        "location": "my_app/updateUserProfile #44",
         "message": "Failed to update profile: Exception: Connection timed out",
         "timestamp": "2025-07-03T18:24:08.518744",
         "tags": [
@@ -216,8 +216,8 @@ The `LogItem.toMap()` or `LogItem.toJson()` function will output detailed inform
         "column": 9,
         "line": 44,
         "package": null,
-        "library": "example/screenshot3.dart",
-        "uri": "file:///Users/robmllze/Projects/flutter/dev_cetera/df_packages/packages/df_log/example/screenshot3.dart"
+        "library": "example/my_app.dart",
+        "uri": "file:///Users/robmllze/Projects/flutter/dev_cetera/df_packages/packages/df_log/example/my_app.dart"
       }
     ]
   }
