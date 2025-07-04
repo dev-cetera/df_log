@@ -1,7 +1,7 @@
-[![banner](https://github.com/dev-cetera/df_log/blob/v0.3.25/doc/assets/banner.png?raw=true)](https://github.com/dev-cetera)
+[![banner](https://github.com/dev-cetera/df_log/blob/v0.3.26/doc/assets/banner.png?raw=true)](https://github.com/dev-cetera)
 
 [![pub](https://img.shields.io/pub/v/df_log.svg)](https://pub.dev/packages/df_log)
-[![tag](https://img.shields.io/badge/Tag-v0.3.25-purple?logo=github)](https://github.com/dev-cetera/df_log/tree/v0.3.25)
+[![tag](https://img.shields.io/badge/Tag-v0.3.26-purple?logo=github)](https://github.com/dev-cetera/df_log/tree/v0.3.26)
 
 [![buymeacoffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-FFDD00?logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/dev_cetera)
 [![sponsor](https://img.shields.io/badge/Sponsor-grey?logo=github-sponsors&logoColor=pink)](https://github.com/sponsors/dev-cetera)
