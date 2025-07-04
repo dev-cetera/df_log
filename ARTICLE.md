@@ -43,7 +43,7 @@ This is what's printed:
 This is the first "Aha!" moment. You instantly get three upgrades:
 
 - You can tell at a glance that this was a success: The `Log.ok` provides the category icon 🟢 and `#ok` tag.
-- You know exactly where this log came from: It came from `example.dart` and within the function main at line`#4`.
+- You know exactly where this log came from: It came from `my_app.dart` and within the function main at line`#4`.
 - In supported consoles, the output is beautifully colored, making it easy to scan.
 
 You've already saved yourself minutes of future debugging time!
