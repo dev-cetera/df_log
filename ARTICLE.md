@@ -26,7 +26,7 @@ Meet [df_log](https://pub.dev/packages/df_log), a pragmatic, opinionated tool de
 
 ## Part 1: Your First Steps - The 5-Minute Upgrade
 
-The initial payoff is immediate. After adding [df_log](https://pub.dev/packages/df_log) to your pubspec.yaml and importing it, you can immediately upgrade your print() statements. Simply replace a `print()` statement with a [df_log](https://pub.dev/packages/df_log) equivalent:
+The initial payoff is immediate. After adding [df_log](https://pub.dev/packages/df_log) to your `pubspec.yaml` and importing it, you can immediately upgrade your `print()` statements. Simply replace a `print()` statement with a [df_log](https://pub.dev/packages/df_log) equivalent:
 
 ```dart
 import 'package:df_log/df_log.dart';
