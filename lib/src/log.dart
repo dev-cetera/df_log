@@ -548,14 +548,22 @@ final class Log {
       items.add(logItem);
     }
 
-    // Execute all callbacks.
+    // Execute all callbacks and catch errors.
+    final callbackErrors = <Object>[];
     for (final callback in callbacks) {
-      callback(logItem);
+      try {
+        callback(logItem);
+      } catch (e) {
+        callbackErrors.add(e);
+      }
     }
 
     // Only print if combinedTags is empty or any of combinedTags are in activeTags.
-    if (combinedTags.isNotEmpty &&
-        !activeTags.any((e) => combinedTags.contains(e))) {
+    if (combinedTags.isNotEmpty && !activeTags.any((e) => combinedTags.contains(e))) {
+      // Throw any errors before returning.
+      for (final e in callbackErrors) {
+        throw e;
+      }
       return;
     }
 
@@ -567,6 +575,10 @@ final class Log {
           )
         : logItem.toConsoleString();
     _printFunction(output);
+    // Throw any errors before returning.
+    for (final e in callbackErrors) {
+      throw e;
+    }
   }
 
   //

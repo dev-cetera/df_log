@@ -16,10 +16,11 @@ homepage: https://dev-cetera.com/
 repository: https://github.com/robmllze/df_log
 funding:
 - https://www.buymeacoffee.com/dev_cetera
-- https://www.patreon.com/RobertMollentze
-- https://github.com/sponsors/robmllze
+- https://www.patreon.com/c/t0mb3rr
+- https://github.com/sponsors/t0mb3rr
+
 description: A package that provides logging utilities for better debugging.
-version: 0.3.26
+version: 0.3.27
 topics:
   - console
   - debugging
