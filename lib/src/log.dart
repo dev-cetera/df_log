@@ -559,7 +559,8 @@ final class Log {
     }
 
     // Only print if combinedTags is empty or any of combinedTags are in activeTags.
-    if (combinedTags.isNotEmpty && !activeTags.any((e) => combinedTags.contains(e))) {
+    if (combinedTags.isNotEmpty &&
+        !activeTags.any((e) => combinedTags.contains(e))) {
       // Throw any errors before returning.
       for (final e in callbackErrors) {
         throw e;
