@@ -25,6 +25,7 @@ final class LogItem {
   final String? location;
   final String? icon;
   final Object? message;
+  final Object? metadata;
   final Set<Symbol> tags;
 
   //
@@ -43,13 +44,14 @@ final class LogItem {
     required this.location,
     required this.icon,
     required this.message,
+    required this.metadata,
     required this.tags,
     required this.showId,
     required this.showTags,
     required this.showTimestamp,
     required this.frame,
-  }) : id = const Uuid().v4(),
-       timestamp = DateTime.now();
+  })  : id = const Uuid().v4(),
+        timestamp = DateTime.now();
 
   //
   //
@@ -102,12 +104,10 @@ final class LogItem {
     final hasLocation = location1 != null && location1.isNotEmpty;
 
     if (hasLocation) {
-      final bracketStyle = nonMessageStyle != null
-          ? AnsiStyle.bold + nonMessageStyle
-          : null;
-      final pathTextStyle = nonMessageStyle != null
-          ? AnsiStyle.italic + nonMessageStyle
-          : null;
+      final bracketStyle =
+          nonMessageStyle != null ? AnsiStyle.bold + nonMessageStyle : null;
+      final pathTextStyle =
+          nonMessageStyle != null ? AnsiStyle.italic + nonMessageStyle : null;
       if (icon != null) {
         buffer.write('$icon ');
       }
@@ -124,8 +124,8 @@ final class LogItem {
 
     if (message != null) {
       final styledMessage = message.toString().trim().withAnsiStyle(
-        messageStyle,
-      );
+            messageStyle,
+          );
       buffer.write(styledMessage);
     }
 
@@ -157,13 +157,7 @@ final class LogItem {
           ? icon
           : null,
       'location': location != null && location!.isNotEmpty ? location : null,
-      'message': () {
-        try {
-          return message?.toString();
-        } catch (e) {
-          return null;
-        }
-      }(),
+      'message': message,
       'timestamp': timestamp.toIso8601String(),
       'tags': tags.isNotEmpty ? tags.map(_unmangleSymbol).toList() : null,
       'id': id,
@@ -181,9 +175,8 @@ final class LogItem {
 
   String toJson({bool pretty = true}) {
     final map = toMap();
-    final encoder = pretty
-        ? const JsonEncoder.withIndent('  ')
-        : const JsonEncoder();
+    final encoder =
+        pretty ? const JsonEncoder.withIndent('  ') : const JsonEncoder();
     return encoder.convert(map);
   }
 

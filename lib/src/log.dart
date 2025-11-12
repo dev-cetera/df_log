@@ -60,13 +60,7 @@ final class Log {
   static final items = Queue<LogItem>();
 
   /// If `true`, enables colors and other ANSI styling in the console output.
-  static var enableStyling = true;
-
-  @Deprecated('Use "enableStyling" instead!')
-  static bool get stylize => enableStyling;
-
-  @Deprecated('Use "enableStyling" instead!')
-  static set stylize(bool value) => enableStyling = value;
+  static var enableStyling = false;
 
   /// If `true`, `Log.assert()` will be evaluated and logs will be printed
   /// even in release builds.
@@ -467,6 +461,7 @@ final class Log {
   static _LogMessage log({
     _IconCategory? category,
     Object? message,
+    Object? metadata,
     AnsiStyle? messageStyle,
     AnsiStyle? nonMessageStyle,
     Set<Symbol> tags = const {},
@@ -478,6 +473,7 @@ final class Log {
       inReleaseMode = false;
       _printLog(
         message: message,
+        metadata: metadata,
         category: category,
         messageStyle: messageStyle,
         nonMessageStyle: nonMessageStyle,
@@ -490,6 +486,7 @@ final class Log {
     if (inReleaseMode && enableReleaseAsserts) {
       _printLog(
         message: message,
+        metadata: metadata,
         category: category,
         messageStyle: messageStyle,
         nonMessageStyle: nonMessageStyle,
@@ -509,6 +506,7 @@ final class Log {
   @pragma('vm:prefer-inline')
   static void _printLog({
     required Object? message,
+    required Object? metadata,
     required _IconCategory? category,
     required AnsiStyle? messageStyle,
     required AnsiStyle? nonMessageStyle,
@@ -532,6 +530,7 @@ final class Log {
       location: location,
       icon: category?.icon,
       message: message,
+      metadata: metadata,
       tags: combinedTags,
       showId: showIds,
       showTags: showTags,
@@ -600,12 +599,12 @@ String? _shortLocation(String? location, String? member) {
   final path = parts.first;
   final line = parts.last.split(':').first;
   final file = path.split('/').last.replaceAll('.dart', '');
-  if (path.startsWith('package:')) {
-    final package = path.split(':')[1].split('/').first;
-    return '$package:$file #$line';
-  } else {
-    return '$file/$member #$line';
-  }
+  return [
+    if (path.startsWith('package:')) '${path.split(':')[1].split('/').first}:',
+    file,
+    if (member != null) ...['/$member'],
+    ' #$line',
+  ].join();
 }
 
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░

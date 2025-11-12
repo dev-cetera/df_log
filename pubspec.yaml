@@ -20,7 +20,7 @@ funding:
 - https://github.com/sponsors/t0mb3rr
 
 description: A package that provides logging utilities for better debugging.
-version: 0.3.27
+version: 0.3.28
 topics:
   - console
   - debugging
@@ -37,8 +37,8 @@ environment:
 
 dependencies:
   meta: ^1.16.0
-  path: ^1.9.1
-  stack_trace: ^1.12.1
+  path: ^1.9.0
+  stack_trace: ^1.12.0
   uuid: ^4.5.1
 
   df_safer_dart: ^0.17.8
