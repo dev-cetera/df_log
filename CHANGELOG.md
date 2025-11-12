@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.3.28]
+
+- Released @ 11/2025 (UTC)
+- feat: Add metadata field, add fixes
+
 ## [0.3.27]
 
 - Released @ 9/2025 (UTC)
