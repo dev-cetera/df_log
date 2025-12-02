@@ -20,7 +20,7 @@ funding:
 - https://github.com/sponsors/t0mb3rr
 
 description: A package that provides logging utilities for better debugging.
-version: 0.3.28
+version: 0.3.29
 topics:
   - console
   - debugging

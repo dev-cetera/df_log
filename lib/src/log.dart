@@ -12,6 +12,8 @@ import 'dart:developer' as developer;
 
 import '/_common.dart';
 
+import '_log_item.dart';
+
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
 final class Log {
@@ -42,7 +44,7 @@ final class Log {
   /// If `true`, new logs are added to the in-memory `items` queue.
   static var storeLogs = true;
 
-  static int _maxStoredLogs = 50;
+  static int _maxStoredLogs = 500;
 
   /// The maximum number of logs to keep in memory. Older logs are discarded.
   static int get maxStoredLogs => _maxStoredLogs;
