@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.3.29]
+
+- Released @ 12/2025 (UTC)
+- Add internalIndex to LogItem
+
 ## [0.3.28]
 
 - Released @ 11/2025 (UTC)
