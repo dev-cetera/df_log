@@ -12,8 +12,6 @@ import 'dart:developer' as developer;
 
 import '/_common.dart';
 
-import '_log_item.dart';
-
 // ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
 final class Log {

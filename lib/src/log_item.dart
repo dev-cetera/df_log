@@ -55,9 +55,9 @@ final class LogItem {
     required this.showTags,
     required this.showTimestamp,
     required this.frame,
-  }) : id = const Uuid().v4(),
-       timestamp = DateTime.now(),
-       internalIndex = _internalCount++;
+  })  : id = const Uuid().v4(),
+        timestamp = DateTime.now(),
+        internalIndex = _internalCount++;
 
   //
   //
@@ -110,12 +110,10 @@ final class LogItem {
     final hasLocation = location1 != null && location1.isNotEmpty;
 
     if (hasLocation) {
-      final bracketStyle = nonMessageStyle != null
-          ? AnsiStyle.bold + nonMessageStyle
-          : null;
-      final pathTextStyle = nonMessageStyle != null
-          ? AnsiStyle.italic + nonMessageStyle
-          : null;
+      final bracketStyle =
+          nonMessageStyle != null ? AnsiStyle.bold + nonMessageStyle : null;
+      final pathTextStyle =
+          nonMessageStyle != null ? AnsiStyle.italic + nonMessageStyle : null;
       if (icon != null) {
         buffer.write('$icon ');
       }
@@ -132,8 +130,8 @@ final class LogItem {
 
     if (message != null) {
       final styledMessage = message.toString().trim().withAnsiStyle(
-        messageStyle,
-      );
+            messageStyle,
+          );
       buffer.write(styledMessage);
     }
 
@@ -161,18 +159,19 @@ final class LogItem {
     final uri = frame?.uri.toString();
 
     return {
+      'id': id,
+      'column': column,
       'icon': icon != null && (location != null && location!.isNotEmpty)
           ? icon
           : null,
-      'location': location != null && location!.isNotEmpty ? location : null,
-      'message': message,
-      'timestamp': timestamp.toIso8601String(),
-      'tags': tags.isNotEmpty ? tags.map(_unmangleSymbol).toList() : null,
-      'id': id,
-      'column': column,
-      'line': line,
-      'package': package,
+      'internalIndex': internalIndex,
       'library': library,
+      'line': line,
+      'location': location != null && location!.isNotEmpty ? location : null,
+      'message': message?.toString(),
+      'package': package,
+      'tags': tags.isNotEmpty ? tags.map(_unmangleSymbol).toList() : null,
+      'timestamp': timestamp.toIso8601String(),
       'uri': uri,
     };
   }
@@ -183,9 +182,8 @@ final class LogItem {
 
   String toJson({bool pretty = true}) {
     final map = toMap();
-    final encoder = pretty
-        ? const JsonEncoder.withIndent('  ')
-        : const JsonEncoder();
+    final encoder =
+        pretty ? const JsonEncoder.withIndent('  ') : const JsonEncoder();
     return encoder.convert(map);
   }
 
