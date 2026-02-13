@@ -279,10 +279,7 @@ void main() {
       Log.context = 'MAIN';
 
       final receivePort = ReceivePort();
-      await Isolate.spawn(
-        _isolateEntryPoint,
-        receivePort.sendPort,
-      );
+      await Isolate.spawn(_isolateEntryPoint, receivePort.sendPort);
 
       final result = await receivePort.first as String;
 
@@ -297,10 +294,7 @@ void main() {
       Log.info('main log');
 
       final receivePort = ReceivePort();
-      await Isolate.spawn(
-        _isolateLogEntryPoint,
-        receivePort.sendPort,
-      );
+      await Isolate.spawn(_isolateLogEntryPoint, receivePort.sendPort);
 
       final result = await receivePort.first as Map;
 
@@ -966,7 +960,11 @@ void main() {
       final jsonl = Log.exportLogsAsJsonLines();
       final lines = jsonl.trim().split('\n');
       for (final line in lines) {
-        expect(() => jsonDecode(line), returnsNormally, reason: 'Invalid JSON: $line');
+        expect(
+          () => jsonDecode(line),
+          returnsNormally,
+          reason: 'Invalid JSON: $line',
+        );
       }
     });
 
@@ -1066,9 +1064,5 @@ void _isolateEntryPoint(SendPort sendPort) {
 void _isolateLogEntryPoint(SendPort sendPort) {
   Log.context = 'WORKER';
   Log.info('worker log');
-  sendPort.send({
-    'context': Log.context,
-    'itemCount': Log.items.length,
-  });
+  sendPort.send({'context': Log.context, 'itemCount': Log.items.length});
 }
-

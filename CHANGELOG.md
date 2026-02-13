@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.3.31]
+
+- Released @ 2/2026 (UTC)
+- Add support for isolates and write tests
+
 ## [0.3.30]
 
 - Released @ 12/2025 (UTC)
