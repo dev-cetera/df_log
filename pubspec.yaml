@@ -13,14 +13,16 @@
 
 name: df_log
 homepage: https://dev-cetera.com/
-repository: https://github.com/robmllze/df_log
 funding:
 - https://www.buymeacoffee.com/dev_cetera
-- https://www.patreon.com/c/t0mb3rr
-- https://github.com/sponsors/t0mb3rr
+- https://www.patreon.com/c/robelator
+- https://github.com/sponsors/robelator
+- https://www.buymeacoffee.com/dev_cetera
+- https://www.patreon.com/c/robelator
+- https://github.com/sponsors/robelator
 
 description: A package that provides logging utilities for better debugging.
-version: 0.3.30
+version: 0.3.31
 topics:
   - console
   - debugging
@@ -46,7 +48,8 @@ dependencies:
 ## -----------------------------------------------------------------------------
 
 dev_dependencies:
+  test: ^1.25.0
   lints: ^6.0.0
   custom_lint: ^0.7.5
-  df_safer_dart_lints: ^0.3.3
+  df_safer_dart_lints: ^0.3.5
 

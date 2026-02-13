@@ -4,7 +4,7 @@
 [![tag](https://img.shields.io/badge/Tag-v0.3.30-purple?logo=github)](https://github.com/dev-cetera/df_log/tree/v0.3.30)
 [![buymeacoffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-FFDD00?logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/dev_cetera)
 [![sponsor](https://img.shields.io/badge/Sponsor-grey?logo=github-sponsors&logoColor=pink)](https://github.com/sponsors/dev-cetera)
-[![patreon](https://img.shields.io/badge/Patreon-grey?logo=patreon)](https://www.patreon.com/t0mb3rr)
+[![patreon](https://img.shields.io/badge/Patreon-grey?logo=patreon)](https://www.patreon.com/robelator)
 [![discord](https://img.shields.io/badge/Discord-5865F2?logo=discord&logoColor=white)](https://discord.gg/gEQ8y2nfyX)
 [![instagram](https://img.shields.io/badge/Instagram-E4405F?logo=instagram&logoColor=white)](https://www.instagram.com/dev_cetera/)
 [![license](https://img.shields.io/badge/License-MIT-blue.svg)](https://raw.githubusercontent.com/dev-cetera/df_log/main/LICENSE)
@@ -24,6 +24,8 @@
 - **Release Mode Control:** Configure logs and assertions to be active even in release builds.
 - **Customizable Output:** Show or hide timestamps, log IDs, and tags.
 - **IDE Integration:** Optionally uses `dart:developer`'s `log` function for a richer experience in some IDEs.
+- **Isolate-Friendly:** Set `Log.context` per isolate to instantly see where logs come from. Works on web too.
+- **Log Export:** Export stored logs as JSONL with `Log.exportLogsAsJsonLines()`.
 - **Extensible:** Add custom callbacks to integrate with other services (e.g., crash reporting).
 
 ## 📸 Screenshot
@@ -100,12 +102,40 @@ void main() {
 }
 ```
 
-### 💡 3. Configuration
+### 💡 4. Isolate Context
+
+When debugging across isolates, set `Log.context` at the start of each isolate. Since Dart statics are per-isolate, each isolate gets its own value automatically - no locking, no shared state, no complexity.
+
+```dart
+void main() {
+  Log.context = 'MAIN';
+  Log.info('Starting app');
+  // Output: [🟣 example #5 MAIN] Starting app
+  runApp(const App());
+}
+
+@pragma("vm:entry-point")
+void overlayMain() {
+  Log.context = 'OVERLAY';
+  Log.info('Overlay started');
+  // Output: [🟣 example #5 OVERLAY] Overlay started
+  runApp(const Overlay());
+}
+```
+
+Use a short tag like `M` to save space, or a full string like `ISOLATE_MAIN` for clarity.
+
+**How it works:** In Dart, each isolate has its own memory. All `Log` statics (`context`, `items`, `activeTags`, etc.) are independent per isolate. This means `Log.context = 'OVERLAY'` in one isolate has zero effect on another. The only shared thing is the console output (stdout), which is why `Log.context` exists - so you can tell which isolate printed what. This works on all platforms including web.
+
+### 💡 5. Configuration
 
 You can customize the logging behavior to suit your needs, including styling, output format, and storage options. The Log class provides various settings to control how logs are displayed and managed.
 
 ```dart
 void main() {
+  // Set a label for the current isolate (useful for multi-isolate debugging).
+  Log.context = 'MAIN';
+
    // Enable or disable ANSI colors and icons. Disable this if your console doesn't support it.
   Log.enableStyling = true;
 
@@ -141,6 +171,17 @@ void main() {
 
   // Remove an existing callback.
   Log.removeCallback(callback);
+
+  // Get notified when old logs are discarded from the queue.
+  Log.onLogDiscarded = (discardedItem) {
+    // TODO: Forward to analytics before it's gone.
+  };
+
+  // Clear log history.
+  Log.clear();
+
+  // Export all stored logs as a JSONL string.
+  final jsonl = Log.exportLogsAsJsonLines();
 
   runApp(MyApp());
 }

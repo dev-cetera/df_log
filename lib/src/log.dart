@@ -25,7 +25,28 @@ final class Log {
   //
   //
 
-  /// A filter for console output. A log is printed if untagged, or if ALL of
+  /// A custom label for the current isolate or execution context.
+  ///
+  /// Set this at the start of each isolate to identify where logs come from.
+  /// Displayed inside the square brackets of the log output.
+  ///
+  /// Dart statics are per-isolate, so each isolate gets its own value.
+  ///
+  /// ```dart
+  /// void main() {
+  ///   Log.context = 'MAIN';
+  ///   runApp(const App());
+  /// }
+  ///
+  /// @pragma("vm:entry-point")
+  /// void overlayMain() {
+  ///   Log.context = 'OVERLAY';
+  ///   runApp(const Overlay());
+  /// }
+  /// ```
+  static String? context;
+
+  /// A filter for console output. A log is printed if untagged, or if any of
   /// its tags are present in this set.
   static var activeTags = {#debug, ..._IconCategory.values.map((e) => e.tag)};
 
@@ -52,12 +73,17 @@ final class Log {
   static set maxStoredLogs(int value) {
     _maxStoredLogs = value < 0 ? 0 : value;
     while (items.length > _maxStoredLogs) {
-      items.removeFirst();
+      final discarded = items.removeFirst();
+      onLogDiscarded?.call(discarded);
     }
   }
 
   /// An in-memory queue of the most recent log items, capped by `maxStoredLogs`.
   static final items = Queue<LogItem>();
+
+  /// Called when the log queue is full and the oldest log is about to be
+  /// discarded. Receives the [LogItem] being removed.
+  static void Function(LogItem discardedItem)? onLogDiscarded;
 
   /// If `true`, enables colors and other ANSI styling in the console output.
   static var enableStyling = false;
@@ -104,6 +130,20 @@ final class Log {
 
   /// The internal function used for printing. Defaults to the standard `print`.
   static void Function(Object?) _printFunction = print;
+
+  /// Clears the in-memory log history.
+  static void clear() => items.clear();
+
+  /// Exports all stored logs as a JSONL string (one JSON object per line).
+  ///
+  /// Web-safe. Use however you want: save to file, send to a server, etc.
+  static String exportLogsAsJsonLines() {
+    final buffer = StringBuffer();
+    for (final item in items) {
+      buffer.writeln(item.toJson(pretty: false));
+    }
+    return buffer.toString();
+  }
 
   //
   //
@@ -536,14 +576,15 @@ final class Log {
       showTags: showTags,
       showTimestamp: showTimestamps,
       frame: frame,
+      context: context,
     );
 
     // Remove old logs.
-    if (storeLogs) {
-      if (items.length >= maxStoredLogs) {
-        items.removeFirst();
+    if (storeLogs && maxStoredLogs > 0) {
+      while (items.length >= maxStoredLogs) {
+        final discarded = items.removeFirst();
+        onLogDiscarded?.call(discarded);
       }
-      // Maybe store new logs.
       items.add(logItem);
     }
 

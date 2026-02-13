@@ -275,7 +275,8 @@ Here is a quick reference to all the main features available.
 
 ### Configuration (Static Properties on Log)
 
-- `Log.enableStyling = true`: Enables/disables ANSI colors and icons. Set this to false if your terminal does not supprt ANSI colors.
+- `Log.context = 'MAIN'`: Labels the current isolate. Shows inside the log brackets so you can tell which isolate printed what.
+- `Log.enableStyling = true`: Enables/disables ANSI colors and icons. Set this to false if your terminal does not support ANSI colors.
 - `Log.showTimestamps = true`: Shows a HH:mm:ss.SSS timestamp on each log.
 - `Log.showTags = true`: Shows tags like #auth #ui on each log.
 - `Log.showIds = false`: Shows a unique ID on each log.
@@ -286,8 +287,32 @@ Here is a quick reference to all the main features available.
 - `Log.storeLogs = true`: If true, keeps a history of logs in memory.
 - `Log.maxStoredLogs = 50`: Sets the max number of LogItem objects to store.
 - `Log.items`: A `Queue<LogItem>` containing the stored logs.
+- `Log.clear()`: Clears all stored logs.
 - `Log.addCallback(callback)`: Registers a function void `Function(LogItem item)` that runs for every log.
 - `Log.removeCallback(callback)`: Removes a previously registered callback.
+- `Log.onLogDiscarded`: Called when old logs are removed from the queue (when full).
+- `Log.exportLogsAsJsonLines()`: Exports all stored logs as a JSONL string.
+
+### Multi-Isolate Debugging
+
+In Dart, each isolate has its own memory. All `Log` statics (`context`, `items`, `activeTags`, etc.) are independent per isolate. Set `Log.context` at the start of each isolate to label it:
+
+```dart
+void main() {
+  Log.context = 'MAIN';
+  runApp(const App());
+}
+
+@pragma("vm:entry-point")
+void overlayMain() {
+  Log.context = 'OVERLAY';
+  runApp(const Overlay());
+}
+```
+
+Output: `[🟣 app #43 MAIN] Starting payment...` vs `[🟣 overlay #12 OVERLAY] Rendering widget`
+
+This works on all platforms including web.
 
 ### Advanced Output
 

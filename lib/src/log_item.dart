@@ -29,6 +29,7 @@ final class LogItem {
   final Object? message;
   final Object? metadata;
   final Set<Symbol> tags;
+  final String? context;
   final int internalIndex;
   static int _internalCount = 0;
 
@@ -55,6 +56,7 @@ final class LogItem {
     required this.showTags,
     required this.showTimestamp,
     required this.frame,
+    required this.context,
   }) : id = const Uuid().v4(),
        timestamp = DateTime.now(),
        internalIndex = _internalCount++;
@@ -73,6 +75,9 @@ final class LogItem {
         buffer.write('$icon ');
       }
       buffer.write(location);
+      if (context != null && context!.isNotEmpty) {
+        buffer.write(' $context');
+      }
       if (showTimestamp) {
         final isoString = timestamp.toLocal().toIso8601String();
         final timeStr = isoString.substring(11, 23);
@@ -121,7 +126,9 @@ final class LogItem {
       }
       buffer.write('['.withAnsiStyle(bracketStyle));
       buffer.write(location1.withAnsiStyle(pathTextStyle));
-
+      if (context != null && context!.isNotEmpty) {
+        buffer.write(' $context'.withAnsiStyle(bracketStyle));
+      }
       if (showTimestamp) {
         final isoString = timestamp.toLocal().toIso8601String();
         final timeStr = isoString.substring(11, 23);
@@ -163,6 +170,7 @@ final class LogItem {
     return {
       'id': id,
       'column': column,
+      'context': context,
       'icon': icon != null && (location != null && location!.isNotEmpty)
           ? icon
           : null,
