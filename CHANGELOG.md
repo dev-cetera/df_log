@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.3.32]
+
+- Released @ 5/2026 (UTC)
+- bugfixes with claude
+
 ## [0.3.31]
 
 - Released @ 2/2026 (UTC)

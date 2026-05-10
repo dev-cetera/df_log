@@ -1163,7 +1163,10 @@ void main() {
 
     test('metadata accepts arbitrary nested structures', () {
       final payload = {
-        'user': {'id': 'u1', 'roles': ['admin', 'editor']},
+        'user': {
+          'id': 'u1',
+          'roles': ['admin', 'editor'],
+        },
         'count': 3,
       };
       Log.log(message: 'x', metadata: payload);

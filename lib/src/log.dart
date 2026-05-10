@@ -606,8 +606,7 @@ final class Log {
     // Print only if combinedTags is empty or any of combinedTags are in
     // activeTags.
     final shouldPrint =
-        combinedTags.isEmpty ||
-        activeTags.any((e) => combinedTags.contains(e));
+        combinedTags.isEmpty || activeTags.any((e) => combinedTags.contains(e));
     if (shouldPrint) {
       final output = enableStyling
           ? logItem.toStyledConsoleString(
