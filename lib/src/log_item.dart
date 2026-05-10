@@ -164,6 +164,7 @@ final class LogItem {
     final column = frame?.column;
     final library = frame?.library;
     final line = frame?.line;
+    final member = frame?.member;
     final package = frame?.package;
     final uri = frame?.uri.toString();
 
@@ -178,7 +179,9 @@ final class LogItem {
       'library': library,
       'line': line,
       'location': location != null && location!.isNotEmpty ? location : null,
+      'member': member,
       'message': message?.toString(),
+      'metadata': metadata,
       'package': package,
       'tags': tags.isNotEmpty ? tags.map(_unmangleSymbol).toList() : null,
       'timestamp': timestamp.toIso8601String(),

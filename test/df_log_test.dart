@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert' show jsonDecode;
 import 'dart:isolate';
 
@@ -651,7 +652,9 @@ void main() {
         'library',
         'line',
         'location',
+        'member',
         'message',
+        'metadata',
         'package',
         'tags',
         'timestamp',
@@ -1050,6 +1053,191 @@ void main() {
       expect(map['message'], 'serialize me');
     });
   });
+
+  // ---------------------------------------------------------------------------
+  // ANSI codes for color helpers (regression: printLightRed / printLightYellow
+  // previously emitted the dark variant)
+  // ---------------------------------------------------------------------------
+
+  group('Color helper ANSI codes', () {
+    test('printLightRed emits code 91 (not 31)', () {
+      Log.enableStyling = true;
+      final output = _captureStdout(() => Log.printLightRed('x'));
+      expect(output, contains('[91m'));
+      expect(output, isNot(contains('[31m')));
+    });
+
+    test('printLightYellow emits code 93 (not 33)', () {
+      Log.enableStyling = true;
+      final output = _captureStdout(() => Log.printLightYellow('x'));
+      expect(output, contains('[93m'));
+      expect(output, isNot(contains('[33m')));
+    });
+
+    test('printRed still emits code 31', () {
+      Log.enableStyling = true;
+      final output = _captureStdout(() => Log.printRed('x'));
+      expect(output, contains('[31m'));
+    });
+
+    test('printYellow still emits code 33', () {
+      Log.enableStyling = true;
+      final output = _captureStdout(() => Log.printYellow('x'));
+      expect(output, contains('[33m'));
+    });
+
+    test('all standard color helpers emit codes 30-37', () {
+      Log.enableStyling = true;
+      final cases = <(void Function(), int)>[
+        (() => Log.printBlack('x'), 30),
+        (() => Log.printRed('x'), 31),
+        (() => Log.printGreen('x'), 32),
+        (() => Log.printYellow('x'), 33),
+        (() => Log.printBlue('x'), 34),
+        (() => Log.printPurple('x'), 35),
+        (() => Log.printCyan('x'), 36),
+        (() => Log.printWhite('x'), 37),
+      ];
+      for (final (call, code) in cases) {
+        final output = _captureStdout(call);
+        expect(
+          output,
+          contains('[${code}m'),
+          reason: 'Expected ANSI code $code',
+        );
+      }
+    });
+
+    test('all light color helpers emit codes 90-97', () {
+      Log.enableStyling = true;
+      final cases = <(void Function(), int)>[
+        (() => Log.printLightBlack('x'), 90),
+        (() => Log.printLightRed('x'), 91),
+        (() => Log.printLightGreen('x'), 92),
+        (() => Log.printLightYellow('x'), 93),
+        (() => Log.printLightBlue('x'), 94),
+        (() => Log.printLightPurple('x'), 95),
+        (() => Log.printLightCyan('x'), 96),
+        (() => Log.printLightWhite('x'), 97),
+      ];
+      for (final (call, code) in cases) {
+        final output = _captureStdout(call);
+        expect(
+          output,
+          contains('[${code}m'),
+          reason: 'Expected ANSI code $code',
+        );
+      }
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // metadata + frame.member are stored on LogItem and serialized
+  // ---------------------------------------------------------------------------
+
+  group('LogItem.metadata', () {
+    test('metadata is stored on LogItem', () {
+      Log.log(message: 'x', metadata: {'foo': 1, 'bar': 'baz'});
+      expect(Log.items.last.metadata, {'foo': 1, 'bar': 'baz'});
+    });
+
+    test('metadata appears in toMap', () {
+      Log.log(message: 'x', metadata: {'k': 'v'});
+      final map = Log.items.last.toMap();
+      expect(map['metadata'], {'k': 'v'});
+    });
+
+    test('metadata round-trips through toJson', () {
+      Log.log(message: 'x', metadata: {'count': 42});
+      final json = Log.items.last.toJson();
+      final decoded = jsonDecode(json) as Map<String, dynamic>;
+      expect(decoded['metadata'], {'count': 42});
+    });
+
+    test('metadata is null in toMap when not provided', () {
+      Log.info('x');
+      final map = Log.items.last.toMap();
+      expect(map.containsKey('metadata'), isTrue);
+      expect(map['metadata'], isNull);
+    });
+
+    test('metadata accepts arbitrary nested structures', () {
+      final payload = {
+        'user': {'id': 'u1', 'roles': ['admin', 'editor']},
+        'count': 3,
+      };
+      Log.log(message: 'x', metadata: payload);
+      expect(Log.items.last.metadata, payload);
+    });
+  });
+
+  group('LogItem.frame.member', () {
+    test('frame is captured for normal log calls', () {
+      Log.info('x');
+      expect(Log.items.last.frame, isNotNull);
+    });
+
+    test('frame.member is non-null for normal log calls', () {
+      Log.info('x');
+      expect(Log.items.last.frame?.member, isNotNull);
+    });
+
+    test('member appears in toMap', () {
+      Log.info('x');
+      final map = Log.items.last.toMap();
+      expect(map.containsKey('member'), isTrue);
+      expect(map['member'], isNotNull);
+    });
+
+    test('member is null in toMap for logs without a frame', () {
+      // Colored print helpers pass includePath: false, so no frame is captured.
+      Log.printRed('x');
+      final map = Log.items.last.toMap();
+      expect(map['member'], isNull);
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // Location formatting (regression: replaceAll('.dart', '') was greedy)
+  // ---------------------------------------------------------------------------
+
+  group('Location formatting', () {
+    test('location does not contain .dart extension', () {
+      Log.info('x');
+      final loc = Log.items.last.location;
+      expect(loc, isNotNull);
+      expect(loc, isNot(contains('.dart')));
+    });
+
+    test('location includes file basename and line number', () {
+      Log.info('x');
+      final loc = Log.items.last.location!;
+      expect(loc, contains('df_log_test'));
+      expect(loc, matches(RegExp(r'#\d+$')));
+    });
+
+    test('location includes member when available', () {
+      Log.info('x');
+      final loc = Log.items.last.location!;
+      // Inside a test() callback, the member is some <fn>-style closure name.
+      expect(loc, contains('/'));
+    });
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Stdout capture helper for ANSI assertions
+// ---------------------------------------------------------------------------
+
+String _captureStdout(void Function() body) {
+  final buffer = StringBuffer();
+  runZoned(
+    body,
+    zoneSpecification: ZoneSpecification(
+      print: (_, __, ___, line) => buffer.writeln(line),
+    ),
+  );
+  return buffer.toString();
 }
 
 // ---------------------------------------------------------------------------

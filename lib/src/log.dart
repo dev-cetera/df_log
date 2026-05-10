@@ -68,7 +68,7 @@ final class Log {
   /// The maximum number of logs to keep in memory. Older logs are discarded.
   static int get maxStoredLogs => _maxStoredLogs;
 
-  /// Sets thhe maximum number of logs to keep in memory. Discards any older
+  /// Sets the maximum number of logs to keep in memory. Discards any older
   /// logs exceeding this limit.
   static set maxStoredLogs(int value) {
     _maxStoredLogs = value < 0 ? 0 : value;
@@ -88,8 +88,9 @@ final class Log {
   /// If `true`, enables colors and other ANSI styling in the console output.
   static var enableStyling = false;
 
-  /// If `true`, `Log.assert()` will be evaluated and logs will be printed
-  /// even in release builds.
+  /// If `true`, logs are printed even in release builds (where asserts are
+  /// stripped). Default is `false`, so AOT-compiled binaries are silent
+  /// unless this is enabled.
   static var enableReleaseAsserts = false;
 
   /// If `true`, the logs will be printed with IDs.
@@ -409,7 +410,7 @@ final class Log {
   ]) {
     return log(
       message: message,
-      messageStyle: AnsiStyle.fgRed,
+      messageStyle: AnsiStyle.fgLightRed,
       includePath: false,
       initialStackLevel: initialStackLevel,
     );
@@ -435,7 +436,7 @@ final class Log {
   ]) {
     return log(
       message: message,
-      messageStyle: AnsiStyle.fgYellow,
+      messageStyle: AnsiStyle.fgLightYellow,
       includePath: false,
       initialStackLevel: initialStackLevel,
     );
@@ -588,37 +589,37 @@ final class Log {
       items.add(logItem);
     }
 
-    // Execute all callbacks and catch errors.
-    final callbackErrors = <Object>[];
+    // Execute all callbacks. If any throw, remember the first error and its
+    // stack so we can rethrow after printing — but never let one bad callback
+    // prevent later callbacks or printing from running.
+    Object? firstError;
+    StackTrace? firstStackTrace;
     for (final callback in callbacks) {
       try {
         callback(logItem);
-      } catch (e) {
-        callbackErrors.add(e);
+      } catch (e, st) {
+        firstError ??= e;
+        firstStackTrace ??= st;
       }
     }
 
-    // Only print if combinedTags is empty or any of combinedTags are in activeTags.
-    if (combinedTags.isNotEmpty &&
-        !activeTags.any((e) => combinedTags.contains(e))) {
-      // Throw any errors before returning.
-      for (final e in callbackErrors) {
-        throw e;
-      }
-      return;
+    // Print only if combinedTags is empty or any of combinedTags are in
+    // activeTags.
+    final shouldPrint =
+        combinedTags.isEmpty ||
+        activeTags.any((e) => combinedTags.contains(e));
+    if (shouldPrint) {
+      final output = enableStyling
+          ? logItem.toStyledConsoleString(
+              messageStyle: messageStyle,
+              nonMessageStyle: nonMessageStyle,
+            )
+          : logItem.toConsoleString();
+      _printFunction(output);
     }
 
-    // Print either styled or not styled using _printFunction.
-    final output = enableStyling
-        ? logItem.toStyledConsoleString(
-            messageStyle: messageStyle,
-            nonMessageStyle: nonMessageStyle,
-          )
-        : logItem.toConsoleString();
-    _printFunction(output);
-    // Throw any errors before returning.
-    for (final e in callbackErrors) {
-      throw e;
+    if (firstError != null) {
+      Error.throwWithStackTrace(firstError, firstStackTrace!);
     }
   }
 
@@ -639,7 +640,10 @@ String? _shortLocation(String? location, String? member) {
   final parts = location.split(RegExp(r'\s+'));
   final path = parts.first;
   final line = parts.last.split(':').first;
-  final file = path.split('/').last.replaceAll('.dart', '');
+  final basename = path.split('/').last;
+  final file = basename.endsWith('.dart')
+      ? basename.substring(0, basename.length - 5)
+      : basename;
   return [
     if (path.startsWith('package:')) '${path.split(':')[1].split('/').first}:',
     file,
