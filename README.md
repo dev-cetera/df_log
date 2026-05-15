@@ -1,7 +1,7 @@
-[![banner](https://github.com/dev-cetera/df_log/blob/v0.3.32/doc/assets/banner.png?raw=true)](https://github.com/dev-cetera)
+[![banner](https://github.com/dev-cetera/df_log/blob/v0.4.0/doc/assets/banner.png?raw=true)](https://github.com/dev-cetera)
 
 [![pub](https://img.shields.io/pub/v/df_log.svg)](https://pub.dev/packages/df_log)
-[![tag](https://img.shields.io/badge/Tag-v0.3.32-purple?logo=github)](https://github.com/dev-cetera/df_log/tree/v0.3.32)
+[![tag](https://img.shields.io/badge/Tag-v0.4.0-purple?logo=github)](https://github.com/dev-cetera/df_log/tree/v0.4.0)
 [![buymeacoffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-FFDD00?logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/dev_cetera)
 [![sponsor](https://img.shields.io/badge/Sponsor-grey?logo=github-sponsors&logoColor=pink)](https://github.com/sponsors/dev-cetera)
 [![patreon](https://img.shields.io/badge/Patreon-grey?logo=patreon)](https://www.patreon.com/robelator)
@@ -86,23 +86,54 @@ void main() {
   Log.addTags({#auth, #ui});
 
   // Printed!
-  Log.info('Initializing UI elements...', {#ui});
-  Log.ok('User logged in.', {#auth});
-  Log.trace('Connecting to database...', {#auth, #firebase});
+  Log.info('Initializing UI elements...', tags: {#ui});
+  Log.ok('User logged in.', tags: {#auth});
+  Log.trace('Connecting to database...', tags: {#auth, #firebase});
 
   // Not printed -  #db tag doesn't exist!
-  Log.trace('Connecting to database...', {#db});
+  Log.trace('Connecting to database...', tags: {#db});
 
    // Not printed -  #ui exists but #button doesn't!
-  Log.trace('Rendering button...', {#ui, #button});
+  Log.trace('Rendering button...', tags: {#ui, #button});
 
   // Printed!
   Log.addTags({#button});
-  Log.trace('Rendering button...', {#ui, #button});
+  Log.trace('Rendering button...', tags: {#ui, #button});
 }
 ```
 
-### 💡 4. Isolate Context
+### 💡 4. Structured Metadata
+
+Pair a log with a structured `metadata` payload that travels through `Log.addCallback` to analytics or crash reporting. The console output stays human-readable; the metadata is for machines.
+
+```dart
+void main() {
+  // Forward user-action logs to analytics, with their metadata as event params.
+  Log.addCallback((logItem) {
+    if (logItem.tags.contains(#userAction)) {
+      final metadata = logItem.metadata as Map<String, Object?>?;
+      // analytics.logEvent(name: logItem.message.toString(), parameters: metadata);
+    }
+  });
+
+  // Call sites pass a stable event name as the message and the params as metadata.
+  Log.info(
+    'create_group',
+    tags: {#userAction},
+    metadata: {'has_description': true, 'member_count': 1},
+  );
+
+  Log.err(
+    'item_sync_failed',
+    tags: {#userAction},
+    metadata: {'item_id': 'abc123', 'status_code': 500},
+  );
+}
+```
+
+`metadata` is `Object?`, so any serializable shape works (maps, lists, nested structures). It also lands in `LogItem.toJson()`, so `Log.exportLogsAsJsonLines()` carries it through.
+
+### 💡 5. Isolate Context
 
 When debugging across isolates, set `Log.context` at the start of each isolate. Since Dart statics are per-isolate, each isolate gets its own value automatically - no locking, no shared state, no complexity.
 
@@ -127,7 +158,7 @@ Use a short tag like `M` to save space, or a full string like `ISOLATE_MAIN` for
 
 **How it works:** In Dart, each isolate has its own memory. All `Log` statics (`context`, `items`, `activeTags`, etc.) are independent per isolate. This means `Log.context = 'OVERLAY'` in one isolate has zero effect on another. The only shared thing is the console output (stdout), which is why `Log.context` exists - so you can tell which isolate printed what. This works on all platforms including web.
 
-### 💡 5. Configuration
+### 💡 6. Configuration
 
 You can customize the logging behavior to suit your needs, including styling, output format, and storage options. The Log class provides various settings to control how logs are displayed and managed.
 

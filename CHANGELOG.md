@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.4.0]
+
+- Released @ 5/2026 (UTC)
+- Add Google analytics support
+
 ## [0.3.32]
 
 - Released @ 5/2026 (UTC)
