@@ -92,22 +92,22 @@ void main() {
   Log.activeTags = {#ui, #auth};
 
   // ✅ Printed! #auth tag got added!
-  Log.ok('User logged in.', {#auth});
+  Log.ok('User logged in.', tags: {#auth});
 
   // ❌ NOT Printed! #network tag is not added!
-  Log.trace('Fetching network info (1)...', {#network});
+  Log.trace('Fetching network info (1)...', tags: {#network});
 
   // Start printing Logs tagged with #network from here on.
   Log.addTags({#network});
 
   // ✅ Printed! #network tag got added!
-  Log.trace('Fetching network info (2)...', {#network});
+  Log.trace('Fetching network info (2)...', tags: {#network});
 
   // Stop printing Logs tagged with #network from here on.
   Log.removeTags({#network});
 
   // ❌ NOT Printed! #network tag got removed!
-  Log.trace('Fetching network info (3)...', {#network});
+  Log.trace('Fetching network info (3)...', tags: {#network});
 }
 ```
 
@@ -160,7 +160,7 @@ void main() {
 
 // Somewhere else in your code...
 void updateUserProfile() {
-  Log.info('Navigated to profile screen.', {#ui, #profile});
+  Log.info('Navigated to profile screen.', tags: {#ui, #profile});
   try {
     // Do stuff...
     throw Exception('Connection timed out');
@@ -168,7 +168,11 @@ void updateUserProfile() {
     // This single line now does two things:
     // 1. Prints the error to the console for you.
     // 2. Triggers the callback to send a crash report WITH breadcrumbs.
-    Log.err('Failed to update profile: $e', {#profile, #network});
+    Log.err(
+      'Failed to update profile: $e',
+      tags: {#profile, #network},
+      metadata: {'exception_type': e.runtimeType.toString()},
+    );
   }
 }
 ```
@@ -226,7 +230,7 @@ The `LogItem.toMap()` or `LogItem.toJson()` function will output detailed inform
 
 ### Use Case 2: Clean and Centralized Analytics
 
-Stop scattering analytics calls like `FirebaseAnalytics.logEvent()` all over your codebase. Use [df_log](https://pub.dev/packages/df_log) tags to manage them from one central place.
+Stop scattering analytics calls like `FirebaseAnalytics.logEvent()` all over your codebase. Use [df_log](https://pub.dev/packages/df_log) tags and the structured `metadata` parameter to manage them from one central place. The log message becomes the event name; `metadata` becomes the event parameters.
 
 ```dart
 // In a setup file.
@@ -234,12 +238,12 @@ void setupAnalytics() {
   Log.addCallback((logItem) {
     // Capture logs tagged with #analytics_event only!
     if (logItem.tags.contains(#analytics_event)) {
-      // The log message can be the event name.
+      // The log message is the stable event name.
       final name = logItem.message.toString();
-      
-      // The LogItem can be converted to a map for parameters.
-      final parameters = logItem.toMap();
-      
+
+      // metadata is the structured payload, ready to forward as-is.
+      final parameters = logItem.metadata as Map<String, Object?>?;
+
       // Send to your service, e.g., Google/Firebase Analytics.
       FirebaseAnalytics.instance.logEvent(
         name: name,
@@ -253,8 +257,12 @@ void setupAnalytics() {
 void onPurchaseButtonPressed() {
   // ... process payment ...
 
-  // This log now sends an event to your analytics provider.
-  Log.ok('purchase_complete', {#analytics_event});
+  // This log now sends a structured event to your analytics provider.
+  Log.ok(
+    'purchase_complete',
+    tags: {#analytics_event},
+    metadata: {'sku': 'pro_yearly', 'amount_cents': 4999},
+  );
 }
 ```
 
@@ -264,14 +272,18 @@ Here is a quick reference to all the main features available.
 
 ### Main Logging Methods
 
-- `Log.info(msg, [tags])`: For general informational messages. (🟣)
-- `Log.ok(msg, [tags])`: For success operations. (🟢)
-- `Log.err(msg, [tags])`: For errors or exceptions. (🔴)
-- `Log.alert(msg, [tags])`: For warnings that need attention. (🟠)
-- `Log.start(msg, [tags])`: To mark the beginning of a process. (🔵)
-- `Log.stop(msg, [tags])`: To mark the end of a process. (⚫)
-- `Log.trace(msg, [tags])`: For fine-grained debugging information. (⚪️)
+All category methods take the message as a positional argument and accept optional named `tags` and `metadata` parameters.
+
+- `Log.info(msg, {tags, metadata})`: For general informational messages. (🟣)
+- `Log.ok(msg, {tags, metadata})`: For success operations. (🟢)
+- `Log.err(msg, {tags, metadata})`: For errors or exceptions. (🔴)
+- `Log.alert(msg, {tags, metadata})`: For warnings that need attention. (🟠)
+- `Log.start(msg, {tags, metadata})`: To mark the beginning of a process. (🔵)
+- `Log.stop(msg, {tags, metadata})`: To mark the end of a process. (⚫)
+- `Log.trace(msg, {tags, metadata})`: For fine-grained debugging information. (⚪️)
 - `Log.printGreen(message)`: Prints a message in a specific color without any other formatting. Many other colors are available (`printRed`, `printYellow`, `printBlue`, etc.).
+
+`tags` is a `Set<Symbol>` for filtering and routing; `metadata` is an `Object?` (typically `Map<String, Object?>`) that travels alongside the log on `LogItem.metadata` and through `toJson()` / `addCallback`.
 
 ### Configuration (Static Properties on Log)
 

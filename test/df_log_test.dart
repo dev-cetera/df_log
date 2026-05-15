@@ -164,7 +164,7 @@ void main() {
     });
 
     test('User tags are combined with category tag', () {
-      Log.info('combined', {#auth, #network});
+      Log.info('combined', tags: {#auth, #network});
       final item = Log.items.last;
       expect(item.tags, contains(#info));
       expect(item.tags, contains(#auth));
@@ -374,7 +374,7 @@ void main() {
 
     test('log with active tag is stored', () {
       Log.addTags({#custom});
-      Log.info('has active tag', {#custom});
+      Log.info('has active tag', tags: {#custom});
       expect(Log.items.length, 1);
     });
 
@@ -404,7 +404,7 @@ void main() {
       // But #info is the category tag, and the code checks ANY match.
       // Since the default still has #debug etc, let's make a stricter test.
       Log.activeTags = {}; // Empty = nothing active.
-      Log.info('suppressed', {#custom});
+      Log.info('suppressed', tags: {#custom});
       // Storage happens BEFORE tag filtering.
       expect(Log.items.length, 1);
       expect(Log.items.last.message.toString(), 'suppressed');
@@ -414,7 +414,7 @@ void main() {
       Log.activeTags = {};
       LogItem? captured;
       Log.addCallback((item) => captured = item);
-      Log.info('filtered', {#custom});
+      Log.info('filtered', tags: {#custom});
       expect(captured, isNotNull);
       expect(captured!.message.toString(), 'filtered');
     });
@@ -580,7 +580,7 @@ void main() {
   group('toMap / toJson', () {
     test('toMap contains all expected keys', () {
       Log.context = 'TEST';
-      Log.info('hello', {#custom});
+      Log.info('hello', tags: {#custom});
       final map = Log.items.last.toMap();
       expect(map.containsKey('id'), isTrue);
       expect(map.containsKey('context'), isTrue);
@@ -608,7 +608,7 @@ void main() {
     });
 
     test('tags in toMap are unmangled', () {
-      Log.info('tagged', {#myTag});
+      Log.info('tagged', tags: {#myTag});
       final map = Log.items.last.toMap();
       final tags = map['tags'] as List;
       expect(tags, contains('myTag'));
@@ -695,7 +695,7 @@ void main() {
 
     test('toConsoleString includes tags when enabled', () {
       Log.showTags = true;
-      Log.info('tagged', {#auth});
+      Log.info('tagged', tags: {#auth});
       final output = Log.items.last.toConsoleString();
       expect(output, contains('#auth'));
       expect(output, contains('#info'));
@@ -703,7 +703,7 @@ void main() {
 
     test('toConsoleString hides tags when disabled', () {
       Log.showTags = false;
-      Log.info('tagged', {#auth});
+      Log.info('tagged', tags: {#auth});
       final output = Log.items.last.toConsoleString();
       expect(output, isNot(contains('#auth')));
     });
@@ -755,7 +755,7 @@ void main() {
 
     test('styled output shows tags when enabled', () {
       Log.showTags = true;
-      Log.info('tagged', {#custom});
+      Log.info('tagged', tags: {#custom});
       final output = Log.items.last.toStyledConsoleString(
         messageStyle: null,
         nonMessageStyle: AnsiStyle.fgLightBlack,
@@ -823,7 +823,7 @@ void main() {
       Log.showTimestamps = true;
       Log.showTags = true;
       Log.showIds = true;
-      Log.info('everything', {#custom});
+      Log.info('everything', tags: {#custom});
       final output = Log.items.last.toConsoleString();
       expect(output, contains('ALL'));
       expect(output, contains('@'));
@@ -893,7 +893,7 @@ void main() {
       Log.context = 'DISC';
       LogItem? discardedItem;
       Log.onLogDiscarded = (item) => discardedItem = item;
-      Log.info('will be discarded', {#custom});
+      Log.info('will be discarded', tags: {#custom});
       Log.info('new one');
       expect(discardedItem, isNotNull);
       expect(discardedItem!.message.toString(), 'will be discarded');
@@ -1032,7 +1032,7 @@ void main() {
     test('LogItem has all fields for UI display', () {
       Log.context = 'APP';
       Log.showTimestamps = true;
-      Log.info('ui test', {#network});
+      Log.info('ui test', tags: {#network});
       final item = Log.items.last;
       // All these should be accessible for building UI widgets.
       expect(item.id, isNotEmpty);
@@ -1224,6 +1224,94 @@ void main() {
       final loc = Log.items.last.location!;
       // Inside a test() callback, the member is some <fn>-style closure name.
       expect(loc, contains('/'));
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // metadata via category wrappers
+  // ---------------------------------------------------------------------------
+
+  group('Metadata via category wrappers', () {
+    test('Log.info forwards metadata to LogItem', () {
+      Log.info('x', metadata: {'event': 'create_group', 'count': 1});
+      expect(Log.items.last.metadata, {'event': 'create_group', 'count': 1});
+    });
+
+    test('Log.err forwards metadata to LogItem', () {
+      Log.err('x', metadata: {'code': 500});
+      expect(Log.items.last.metadata, {'code': 500});
+    });
+
+    test('Log.alert forwards metadata to LogItem', () {
+      Log.alert('x', metadata: {'reason': 'token_expiring'});
+      expect(Log.items.last.metadata, {'reason': 'token_expiring'});
+    });
+
+    test('Log.ok forwards metadata to LogItem', () {
+      Log.ok('x', metadata: {'rows_synced': 42});
+      expect(Log.items.last.metadata, {'rows_synced': 42});
+    });
+
+    test('Log.trace forwards metadata to LogItem', () {
+      Log.trace('x', metadata: {'span': 'auth.init'});
+      expect(Log.items.last.metadata, {'span': 'auth.init'});
+    });
+
+    test('Log.start forwards metadata to LogItem', () {
+      Log.start('x', metadata: {'service': 'realtime'});
+      expect(Log.items.last.metadata, {'service': 'realtime'});
+    });
+
+    test('Log.stop forwards metadata to LogItem', () {
+      Log.stop('x', metadata: {'service': 'realtime'});
+      expect(Log.items.last.metadata, {'service': 'realtime'});
+    });
+
+    test('Log.message forwards metadata to LogItem', () {
+      Log.message('x', metadata: {'topic': 'invite'});
+      expect(Log.items.last.metadata, {'topic': 'invite'});
+    });
+
+    test('Log.ignore forwards metadata to LogItem', () {
+      Log.ignore('x', metadata: {'reason': 'duplicate'});
+      expect(Log.items.last.metadata, {'reason': 'duplicate'});
+    });
+
+    test('metadata is null on wrappers when not provided', () {
+      Log.info('x');
+      Log.err('y');
+      Log.ok('z');
+      for (final item in Log.items) {
+        expect(item.metadata, isNull);
+      }
+    });
+
+    test('metadata and tags can be passed together', () {
+      Log.info(
+        'x',
+        tags: const {#userAction},
+        metadata: {'event': 'create_group'},
+      );
+      expect(Log.items.last.tags, contains(#userAction));
+      expect(Log.items.last.metadata, {'event': 'create_group'});
+    });
+
+    test('callback receives metadata from wrapper', () {
+      LogItem? captured;
+      Log.addCallback((item) => captured = item);
+      Log.info(
+        'x',
+        tags: const {#userAction},
+        metadata: {'event': 'tick_item'},
+      );
+      expect(captured!.metadata, {'event': 'tick_item'});
+    });
+
+    test('wrapper metadata round-trips through toJson', () {
+      Log.info('x', metadata: {'count': 7});
+      final json = Log.items.last.toJson();
+      final decoded = jsonDecode(json) as Map<String, dynamic>;
+      expect(decoded['metadata'], {'count': 7});
     });
   });
 }

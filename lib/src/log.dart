@@ -152,14 +152,16 @@ final class Log {
 
   @pragma('vm:prefer-inline')
   static _LogMessage trace(
-    Object? message, [
+    Object? message, {
     Set<Symbol> tags = const {},
+    Object? metadata,
     @visibleForTesting int initialStackLevel = 0,
-  ]) {
+  }) {
     return log(
       message: message,
       category: _IconCategory.TRACE,
       tags: tags,
+      metadata: metadata,
       nonMessageStyle: AnsiStyle.fgLightBlack,
       initialStackLevel: initialStackLevel,
     );
@@ -167,14 +169,16 @@ final class Log {
 
   @pragma('vm:prefer-inline')
   static _LogMessage err(
-    Object? message, [
+    Object? message, {
     Set<Symbol> tags = const {},
+    Object? metadata,
     @visibleForTesting int initialStackLevel = 0,
-  ]) {
+  }) {
     return log(
       message: message,
       category: _IconCategory.ERR,
       tags: tags,
+      metadata: metadata,
       nonMessageStyle: AnsiStyle.fgLightBlack,
       initialStackLevel: initialStackLevel,
     );
@@ -182,14 +186,16 @@ final class Log {
 
   @pragma('vm:prefer-inline')
   static _LogMessage alert(
-    Object? message, [
+    Object? message, {
     Set<Symbol> tags = const {},
+    Object? metadata,
     @visibleForTesting int initialStackLevel = 0,
-  ]) {
+  }) {
     return log(
       message: message,
       category: _IconCategory.ALERT,
       tags: tags,
+      metadata: metadata,
       nonMessageStyle: AnsiStyle.fgLightBlack,
       initialStackLevel: initialStackLevel,
     );
@@ -197,14 +203,16 @@ final class Log {
 
   @pragma('vm:prefer-inline')
   static _LogMessage ignore(
-    Object? message, [
+    Object? message, {
     Set<Symbol> tags = const {},
+    Object? metadata,
     @visibleForTesting int initialStackLevel = 0,
-  ]) {
+  }) {
     return log(
       message: message,
       category: _IconCategory.IGNORE,
       tags: tags,
+      metadata: metadata,
       nonMessageStyle: AnsiStyle.fgLightBlack,
       messageStyle: AnsiStyle.strikethrough,
       initialStackLevel: initialStackLevel,
@@ -213,14 +221,16 @@ final class Log {
 
   @pragma('vm:prefer-inline')
   static _LogMessage ok(
-    Object? message, [
+    Object? message, {
     Set<Symbol> tags = const {},
+    Object? metadata,
     @visibleForTesting int initialStackLevel = 0,
-  ]) {
+  }) {
     return log(
       message: message,
       category: _IconCategory.OK,
       tags: tags,
+      metadata: metadata,
       nonMessageStyle: AnsiStyle.fgLightBlack,
       initialStackLevel: initialStackLevel,
     );
@@ -228,14 +238,16 @@ final class Log {
 
   @pragma('vm:prefer-inline')
   static _LogMessage start(
-    Object? message, [
+    Object? message, {
     Set<Symbol> tags = const {},
+    Object? metadata,
     @visibleForTesting int initialStackLevel = 0,
-  ]) {
+  }) {
     return log(
       message: message,
       category: _IconCategory.START,
       tags: tags,
+      metadata: metadata,
       nonMessageStyle: AnsiStyle.fgLightBlack,
       initialStackLevel: initialStackLevel,
     );
@@ -243,14 +255,16 @@ final class Log {
 
   @pragma('vm:prefer-inline')
   static _LogMessage stop(
-    Object? message, [
+    Object? message, {
     Set<Symbol> tags = const {},
+    Object? metadata,
     @visibleForTesting int initialStackLevel = 0,
-  ]) {
+  }) {
     return log(
       message: message,
       category: _IconCategory.STOP,
       tags: tags,
+      metadata: metadata,
       nonMessageStyle: AnsiStyle.fgLightBlack,
       initialStackLevel: initialStackLevel,
     );
@@ -258,14 +272,16 @@ final class Log {
 
   @pragma('vm:prefer-inline')
   static _LogMessage info(
-    Object? message, [
+    Object? message, {
     Set<Symbol> tags = const {},
+    Object? metadata,
     @visibleForTesting int initialStackLevel = 0,
-  ]) {
+  }) {
     return log(
       message: message,
       category: _IconCategory.INFO,
       tags: tags,
+      metadata: metadata,
       nonMessageStyle: AnsiStyle.fgLightBlack,
       initialStackLevel: initialStackLevel,
     );
@@ -273,14 +289,16 @@ final class Log {
 
   @pragma('vm:prefer-inline')
   static _LogMessage message(
-    Object? message, [
+    Object? message, {
     Set<Symbol> tags = const {},
+    Object? metadata,
     @visibleForTesting int initialStackLevel = 0,
-  ]) {
+  }) {
     return log(
       message: message,
       category: _IconCategory.MESSAGE,
       tags: tags,
+      metadata: metadata,
       nonMessageStyle: AnsiStyle.fgLightBlack,
       initialStackLevel: initialStackLevel,
     );

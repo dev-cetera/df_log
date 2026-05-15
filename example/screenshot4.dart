@@ -32,7 +32,7 @@ void main() {
 
 // Somewhere else in your code...
 void updateUserProfile() {
-  Log.info('Navigated to profile screen.', {#ui, #profile});
+  Log.info('Navigated to profile screen.', tags: {#ui, #profile});
   try {
     // Do stuff...
     throw Exception('Connection timed out');
@@ -40,6 +40,10 @@ void updateUserProfile() {
     // This single line now does two things:
     // 1. Prints the error to the console for you.
     // 2. Triggers the callback to send a crash report WITH breadcrumbs.
-    Log.err('Failed to update profile: $e', {#profile, #network});
+    Log.err(
+      'Failed to update profile: $e',
+      tags: {#profile, #network},
+      metadata: {'exception_type': e.runtimeType.toString()},
+    );
   }
 }
