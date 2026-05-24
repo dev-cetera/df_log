@@ -1,46 +1,10 @@
 # Changelog
 
+## [0.5.0]
+
+- Bump `df_safer_dart` constraint to `^0.20.10` (was `^0.17.8`); downstream pins on `^0.17.x` will need updating.
+
 ## [0.4.0]
 
 - Released @ 5/2026 (UTC)
 - Add Google analytics support
-
-## [0.3.32]
-
-- Released @ 5/2026 (UTC)
-- bugfixes with claude
-
-## [0.3.31]
-
-- Released @ 2/2026 (UTC)
-- Add support for isolates and write tests
-
-## [0.3.30]
-
-- Released @ 12/2025 (UTC)
-- Minor tweaks
-
-## [0.3.29]
-
-- Released @ 12/2025 (UTC)
-- Add internalIndex to LogItem
-
-## [0.3.28]
-
-- Released @ 11/2025 (UTC)
-- feat: Add metadata field, add fixes
-
-## [0.3.27]
-
-- Released @ 9/2025 (UTC)
-- Improve error handling
-
-## [0.3.26]
-
-- Released @ 7/2025 (UTC)
-- Update docs
-
-## [0.3.25]
-
-- Released @ 7/2025 (UTC)
-- Update docs and assets
