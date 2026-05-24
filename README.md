@@ -9,6 +9,8 @@
 
 ---
 
+<!-- BEGIN _README_CONTENT -->
+
 `df_log` is a massive upgrade from `print()`. It makes your console output beautiful, readable, and powerful, turning your logs into a central event bus for debugging, analytics, and crash reporting. It’s for the developer who wants the simplicity of `print()` but with more clarity, context, and control.
 
 ## ✨ Features
@@ -210,6 +212,8 @@ void main() {
 }
 ```
 
+<!-- END _README_CONTENT -->
+
 ---
 
 🔍 For more information, refer to the [API reference](https://pub.dev/documentation/df_log/).
@@ -235,6 +239,8 @@ No matter how you choose to contribute, your involvement is greatly appreciated 
 ### ☕ We drink a lot of coffee...
 
 If you're enjoying this package and find it valuable, consider showing your appreciation with a small donation. Every bit helps in supporting future development. You can donate here: https://www.buymeacoffee.com/dev_cetera
+
+<a href="https://www.buymeacoffee.com/dev_cetera" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" height="40"></a>
 
 ## LICENSE
 
