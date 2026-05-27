@@ -2,7 +2,11 @@
 
 ## [0.5.0]
 
-- Bump `df_safer_dart` constraint to `^0.20.10` (was `^0.17.8`); downstream pins on `^0.17.x` will need updating.
+- Bump `df_safer_dart` constraint to `^0.21.0`.
+
+## [0.5.0]
+
+- Bump `df_safer_dart` constraint to `^0.20.0` (was `^0.17.8`); downstream pins on `^0.17.x` will need updating.
 
 ## [0.4.0]
 
