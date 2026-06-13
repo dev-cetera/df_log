@@ -20,7 +20,7 @@ funding:
   - https://github.com/sponsors/robelator
 
 description: A package that provides logging utilities for better debugging.
-version: 0.6.0
+version: 0.6.1
 topics:
   - console
   - debugging

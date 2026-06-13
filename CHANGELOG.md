@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.6.1]
+
+- update
+
+
 ## [0.6.0]
 
 - Add `BootAudit` — a persistent boot-by-boot diagnostic trail that survives app restarts and lets you read events from earlier runs in devtools.
