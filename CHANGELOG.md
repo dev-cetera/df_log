@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.6.0]
+## [0.6.1]
 
 - Add `BootAudit` — a persistent boot-by-boot diagnostic trail that survives app restarts and lets you read events from earlier runs in devtools.
 - Add `BootAuditStorage` interface, with bundled `InMemoryBootAuditStorage` (default, tests/non-web) and `LocalStorageBootAuditStorage` (browser `localStorage` on web; no-op stub elsewhere, selected at compile time via `dart.library.js_interop`).
