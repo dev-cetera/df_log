@@ -13,14 +13,10 @@
 
 name: df_log
 homepage: https://dev-cetera.com/
-repository: https://github.com/robmllze/df_log
-funding:
-  - https://www.buymeacoffee.com/dev_cetera
-  - https://www.patreon.com/c/robelator
-  - https://github.com/sponsors/robelator
+repository: https://github.com/dev-cetera/df_log
 
 description: A package that provides logging utilities for better debugging.
-version: 0.6.1
+version: 0.7.0
 topics:
   - console
   - debugging
