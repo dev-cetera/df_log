@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.7.3]
+
+- Merge branch 'main' into prod
+
+
 ## [0.7.2]
 
 - Merge branch 'main' into prod
